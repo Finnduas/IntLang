@@ -1,18 +1,27 @@
 ﻿using InterpreterC_;
 using System.Reflection.Metadata.Ecma335;
 
-String code;
-String line;
+String code = readCode("C:\\Users\\mikaa\\Desktop\\Tor Browser\\Browser\\TorBrowser\\Docs\\test.txt");
 
-    StreamReader sr = new("C:\\Users\\mikaa\\Desktop\\Tor Browser\\Browser\\TorBrowser\\Docs\\ChangeLog.monkey");
+Interpreter interpreter = new();
+if(code != null)
+{
+    interpreter.interpret(code);
+}
 
+static String readCode(String path)
+{
+    String code;
+    String line;
+    
+    StreamReader sr = new(path);
     line = sr.ReadLine();
     
-    if(line == null) {
-        Console.WriteLine("MainErr0: line == null <=> true => reading of file in specified directory failed ");
-        return;
+    if (line == null) //assert
+    {
+        throw new Exception("MainErr0: reading of file in specified directory failed OR file is empty");
     }
-
+    
     code = line;
     while (line != null)
     {
@@ -20,11 +29,7 @@ String line;
         code += "\n";
         code += line;
     }
-
     sr.Close();
 
-    Interpreter interpreter = new();
-    if(code != null)
-    {
-        interpreter.interpret(code);
-    }
+    return code;
+}
