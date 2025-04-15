@@ -24,8 +24,6 @@ namespace Tests
     {
         public void test_next_token(String input, Test[] tests, int j)
         {
-            Console.WriteLine("Running tests...");
-
             Interpreter interpreter = new();
             interpreter.init_lexer(input);
 

@@ -33,71 +33,72 @@ static String read_code(String path)
 
 void run_tests() 
 {
-String testInput0 = "=+(){},;";
-Test[] expectedTestResult0 =
-    [
-    new(TokTypes.ASSIGN, "="),
-        new(TokTypes.PLUS, "+"),
+    Console.WriteLine("Running tests...");
+    String testInput0 = "=+(){},;";
+    Test[] expectedTestResult0 =
+        [
+        new(TokTypes.ASSIGN, "="),
+            new(TokTypes.PLUS, "+"),
+            new(TokTypes.LPAREN, "("),
+            new(TokTypes.RPAREN, ")"),
+            new(TokTypes.LBRACE, "{"),
+            new(TokTypes.RBRACE, "}"),
+            new(TokTypes.COMMA, ","),
+            new(TokTypes.SEMICOLON, ";"),
+            new(TokTypes.EOF, "")
+        ];
+
+    lexerTests.test_next_token(testInput0, expectedTestResult0, 0);
+
+    String testInput1 =
+    "let five = 5;"
+    + "let ten = 10;"
+    + "let add = fn(x, y) {"
+    + "x + y;"
+    + "};"
+    + "let result = add(five, ten) ;";
+    Test[] expectedTestResult1 =
+        [
+        new(TokTypes.LET, "let"),
+        new(TokTypes.IDENT, "five"),
+        new(TokTypes.ASSIGN, "="),
+        new(TokTypes.INT, "5"),
+        new(TokTypes.SEMICOLON, ";"),
+        new(TokTypes.LET, "let"),
+        new(TokTypes.IDENT, "ten"),
+        new(TokTypes.ASSIGN, "="),
+        new(TokTypes.INT, "10"),
+        new(TokTypes.SEMICOLON, ";"),
+        new(TokTypes.LET, "let"),
+        new(TokTypes.IDENT, "add"),
+        new(TokTypes.ASSIGN, "="),
+        new(TokTypes.FUNCTION, "fn"),
         new(TokTypes.LPAREN, "("),
+        new(TokTypes.IDENT, "x"),
+        new(TokTypes.COMMA, ","),
+        new(TokTypes.IDENT, "y"),
         new(TokTypes.RPAREN, ")"),
         new(TokTypes.LBRACE, "{"),
-        new(TokTypes.RBRACE, "}"),
-        new(TokTypes.COMMA, ","),
+        new(TokTypes.IDENT, "x"),
+        new(TokTypes.PLUS, "+"),
+        new(TokTypes.IDENT, "y"),
         new(TokTypes.SEMICOLON, ";"),
-        new(TokTypes.EOF, "")
-    ];
+        new(TokTypes.RBRACE, "}"),
+        new(TokTypes.SEMICOLON, ";"),
+        new(TokTypes.LET, "let"),
+        new(TokTypes.IDENT, "result"),
+        new(TokTypes.ASSIGN, "="),
+        new(TokTypes.IDENT, "add"),
+        new(TokTypes.LPAREN, "("),
+        new(TokTypes.IDENT, "five"),
+        new(TokTypes.COMMA, ","),
+        new(TokTypes.IDENT, "ten"),
+        new(TokTypes.RPAREN, ")"),
+        new(TokTypes.SEMICOLON, ";"),
+        ];
 
-lexerTests.test_next_token(testInput0, expectedTestResult0, 0);
-
-String testInput1 =
-"let five = 5;"
-+ "let ten = 10;"
-+ "let add = fn(x, y) {"
-+ "x + y;"
-+ "};"
-+ "let result = add(five, ten);";
-Test[] expectedTestResult1 =
-    [
-    new(TokTypes.LET, "let"),
-    new(TokTypes.IDENT, "five"),
-    new(TokTypes.ASSIGN, "="),
-    new(TokTypes.INT, "5"),
-    new(TokTypes.SEMICOLON, ";"),
-    new(TokTypes.LET, "let"),
-    new(TokTypes.IDENT, "ten"),
-    new(TokTypes.ASSIGN, "="),
-    new(TokTypes.INT, "10"),
-    new(TokTypes.SEMICOLON, ";"),
-    new(TokTypes.LET, "let"),
-    new(TokTypes.IDENT, "add"),
-    new(TokTypes.ASSIGN, "="),
-    new(TokTypes.FUNCTION, "fn"),
-    new(TokTypes.LPAREN, "("),
-    new(TokTypes.IDENT, "x"),
-    new(TokTypes.COMMA, ","),
-    new(TokTypes.IDENT, "y"),
-    new(TokTypes.RPAREN, ")"),
-    new(TokTypes.LBRACE, "{"),
-    new(TokTypes.IDENT, "x"),
-    new(TokTypes.PLUS, "+"),
-    new(TokTypes.IDENT, "y"),
-    new(TokTypes.SEMICOLON, ";"),
-    new(TokTypes.RBRACE, "}"),
-    new(TokTypes.SEMICOLON, ";"),
-    new(TokTypes.LET, "let"),
-    new(TokTypes.IDENT, "result"),
-    new(TokTypes.ASSIGN, "="),
-    new(TokTypes.IDENT, "add"),
-    new(TokTypes.LPAREN, "("),
-    new(TokTypes.IDENT, "five"),
-    new(TokTypes.COMMA, ","),
-    new(TokTypes.IDENT, "ten"),
-    new(TokTypes.RPAREN, ")"),
-    new(TokTypes.SEMICOLON, ";"),
-    ];
-
-lexerTests.test_next_token(testInput1, expectedTestResult1, 1);
-Console.WriteLine("All tests passed!");
+    lexerTests.test_next_token(testInput1, expectedTestResult1, 1);
+    Console.WriteLine("All tests passed!");
 }
 
 run_tests();

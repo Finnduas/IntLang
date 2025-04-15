@@ -45,6 +45,8 @@ namespace InterpreterC_
         {
             Token tok = new();
 
+            eat_white_space(ref lex);
+
             switch(lex.ch)
             {
                 case '=':
@@ -81,6 +83,12 @@ namespace InterpreterC_
                         tok.m_Type = keyWords.lookup(tok.m_Literal); 
                         return tok;
                     }
+                    else if(is_digit(lex.ch))
+                    {
+                        tok.m_Type = TokTypes.INT;
+                        tok.m_Literal = read_number(ref lex);
+                        return tok;
+                    }
                     else
                     {
                         tok = new(TokTypes.ILLEGAL, lex.ch.ToString());
@@ -102,6 +110,25 @@ namespace InterpreterC_
                 return false;
             }
         }
+        private bool is_digit(char ch)
+        {
+            if('0' <= ch && ch <= '9')
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        void eat_white_space(ref Lexer l)
+        {
+            while (l.ch == ' ' || l.ch == '\t' || l.ch == '\r' || l.ch == '\n')
+            {
+                read_char(ref l);
+            }
+        }
 
         private String read_identifier(ref Lexer l)
         {
@@ -110,8 +137,18 @@ namespace InterpreterC_
             {
                 read_char(ref l);
             }
-            return l.input.Substring(startPosition, l.position);
-        } 
+            return l.input[startPosition..l.position];
+        }
+
+        private String read_number(ref Lexer l)
+        {
+            int startPosition = l.position;
+            while (is_digit(l.ch))
+            {
+                read_char(ref l);
+            }
+            return l.input[startPosition..l.position];
+        }
 
         private void read_char(ref Lexer l)
         {
