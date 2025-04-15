@@ -1,0 +1,7 @@
+let x = 5 + 5;
+
+let add = fn(x, y) {
+    x + y;
+};
+
+let result = add(x, x);
