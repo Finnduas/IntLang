@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using InterpreterC_;
-using Consts;
+using Lookup;
 using System.Runtime.InteropServices;
 
 namespace Tests
@@ -29,7 +29,7 @@ namespace Tests
 
             for (int i = 0; i<tests.Length; i++)
             {
-                Token tok = interpreter.next_token(input);
+                Token tok = interpreter.next_token();
 
                 if(tok.m_Type != tests[i].expectedType)
                 {

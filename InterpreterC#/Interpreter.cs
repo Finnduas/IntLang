@@ -1,4 +1,4 @@
-﻿using Consts;
+﻿using Lookup;
 
 namespace InterpreterC_
 {
@@ -33,7 +33,7 @@ namespace InterpreterC_
 
     internal class Interpreter
     {
-        KeyWords keyWords = new();
+        readonly KeyWords keyWords = new();
         Lexer lex = new();
         public void init_lexer(String code)
         {
@@ -41,7 +41,7 @@ namespace InterpreterC_
             read_char(ref lex);
         }
 
-        public Token next_token(String code)
+        public Token next_token()
         {
             Token tok = new();
 
@@ -50,7 +50,30 @@ namespace InterpreterC_
             switch(lex.ch)
             {
                 case '=':
-                    tok = new(TokTypes.ASSIGN, lex.ch.ToString());
+                    if (peek_char(lex) == '=')
+                    {
+                        char tmpCh = lex.ch;
+                        read_char(ref lex);
+                        String tmpLiteral = tmpCh.ToString() + lex.ch;
+                        tok = new(TokTypes.EQ, tmpLiteral);
+                    }
+                    else
+                    {
+                        tok = new(TokTypes.ASSIGN, lex.ch.ToString());
+                    }
+                    break;
+                case '!':
+                    if (peek_char(lex) == '=')
+                    {
+                        char tmpCh = lex.ch;
+                        read_char(ref lex);
+                        String tmpLiteral = tmpCh.ToString() + lex.ch;
+                        tok = new(TokTypes.NOT_EQ, tmpLiteral);
+                    }
+                    else
+                    {
+                        tok = new(TokTypes.BANG, lex.ch.ToString());
+                    }
                     break;
                 case ';':
                     tok = new(TokTypes.SEMICOLON, lex.ch.ToString());
@@ -66,6 +89,21 @@ namespace InterpreterC_
                     break;
                 case '+':
                     tok = new(TokTypes.PLUS, lex.ch.ToString());
+                    break;
+                case '-':
+                    tok = new(TokTypes.MINUS, lex.ch.ToString());
+                    break;
+                case '/':
+                    tok = new(TokTypes.SLASH, lex.ch.ToString());
+                    break;
+                case '*':
+                    tok = new(TokTypes.ASTERISK, lex.ch.ToString());
+                    break;
+                case '<':
+                    tok = new(TokTypes.LT, lex.ch.ToString());
+                    break;
+                case '>':
+                    tok = new(TokTypes.GT, lex.ch.ToString());
                     break;
                 case '{':
                     tok = new(TokTypes.LBRACE, lex.ch.ToString());
@@ -99,7 +137,8 @@ namespace InterpreterC_
             read_char(ref lex);
             return tok;
         }
-        private bool is_letter(char ch)
+
+        private static bool is_letter(char ch)
         {
             if('a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_')
             {
@@ -110,7 +149,8 @@ namespace InterpreterC_
                 return false;
             }
         }
-        private bool is_digit(char ch)
+
+        private static bool is_digit(char ch)
         {
             if('0' <= ch && ch <= '9')
             {
@@ -122,7 +162,7 @@ namespace InterpreterC_
             }
         }
 
-        void eat_white_space(ref Lexer l)
+        private static void eat_white_space(ref Lexer l)
         {
             while (l.ch == ' ' || l.ch == '\t' || l.ch == '\r' || l.ch == '\n')
             {
@@ -130,7 +170,7 @@ namespace InterpreterC_
             }
         }
 
-        private String read_identifier(ref Lexer l)
+        private static String read_identifier(ref Lexer l)
         {
             int startPosition = l.position;
             while(is_letter(l.ch))
@@ -140,7 +180,7 @@ namespace InterpreterC_
             return l.input[startPosition..l.position];
         }
 
-        private String read_number(ref Lexer l)
+        private static String read_number(ref Lexer l)
         {
             int startPosition = l.position;
             while (is_digit(l.ch))
@@ -150,7 +190,19 @@ namespace InterpreterC_
             return l.input[startPosition..l.position];
         }
 
-        private void read_char(ref Lexer l)
+        private static char peek_char(Lexer l)
+        {
+            if (l.readPosition >= l.input.Length)
+            {
+                return (char)0;
+            }
+            else
+            {
+                return l.input[l.readPosition];
+            }
+        }
+
+        private static void read_char(ref Lexer l)
         {
             if(l.readPosition >= l.input.Length)
             {

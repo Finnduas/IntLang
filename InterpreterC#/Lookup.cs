@@ -1,4 +1,4 @@
-﻿namespace Consts
+﻿namespace Lookup
 {
     public struct TokTypes
     {
@@ -10,6 +10,16 @@
 
         public const String ASSIGN = "=";
         public const String PLUS = "+";
+        public const String MINUS = "-";
+        public const String BANG = "!";
+        public const String ASTERISK = "*";
+        public const String SLASH = "/";
+
+        public const String LT = "<";
+        public const String GT = ">";
+        public const String EQ = "==";
+        public const String NOT_EQ = "!=";
+
 
         public const String COMMA = ",";
         public const String SEMICOLON = ";";
@@ -21,6 +31,11 @@
 
         public const String FUNCTION = "FUNCTION";
         public const String LET = "LET";
+        public const String TRUE = "TRUE";
+        public const String FALSE = "FALSE";
+        public const String IF = "IF";
+        public const String ELSE = "ELSE";
+        public const String RETURN = "RETURN";
     }
 
     public class KeyWords
@@ -29,7 +44,13 @@
         public Dictionary<String, String> keyWords = new Dictionary<String, String>
         {
             {"fn" , TokTypes.FUNCTION},
-            {"let" , TokTypes.LET}
+            {"let" , TokTypes.LET},
+            {"true" , TokTypes.TRUE},
+            {"false" , TokTypes.FALSE},
+            {"if" , TokTypes.IF},
+            {"else" , TokTypes.ELSE},
+            {"return" , TokTypes.RETURN},
+
         };
 
         public KeyWords()
