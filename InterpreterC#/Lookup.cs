@@ -26,8 +26,8 @@
 
         public const String LPAREN = "(";
         public const String RPAREN = ")";
-        public const String LBRACE = "[";
-        public const String RBRACE = "]";
+        public const String LBRACE = "{";
+        public const String RBRACE = "}";
 
         public const String FUNCTION = "FUNCTION";
         public const String LET = "LET";
