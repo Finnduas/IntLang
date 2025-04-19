@@ -212,6 +212,7 @@ void parser_tests()
 
     tests.test_parser(testInput0, testIdenfiers0, 0);
 }
+
 void run_tests() 
 {
     Console.WriteLine("Running lexer tests...");

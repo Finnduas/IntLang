@@ -14,13 +14,42 @@ namespace InterpreterC_
 
         private Token curToken;
         private Token peekToken;
+        private List<String> errors;
 
         public Parser(LexerManager pLexMan)
         {
+            errors = new();
             lexMan = pLexMan;
             next_token();
             next_token();
         }
+
+        public List<String> get_errors()
+        {
+            return errors;
+        }
+        public void peek_error(String tokType)
+        {
+            errors.Add("expected next token to be " + tokType + ", got " + peekToken.m_Type);
+        }
+
+        public bool check_for_parser_errors()
+        {
+            if (get_errors().Count == 0)
+            {
+                return false;
+            }
+            else { 
+
+            Console.WriteLine("Provided code has ERRORs:");
+            for (int i = 0; i < get_errors().Count; ++i)
+            {
+                Console.WriteLine(get_errors()[i]);
+            }
+            return true;
+            }
+        }
+
 
         public void next_token()
         {
@@ -60,6 +89,7 @@ namespace InterpreterC_
             }
             else
             {
+                peek_error(tokType);
                 return false;
             }
         }
@@ -95,22 +125,18 @@ namespace InterpreterC_
                     return null;
             }
         }
-        public void append(ref List<Statement> statements, Statement stmt)
-        {
-            statements.Add(stmt);
-        }
 
         public Program parse_program()
         {
             Program program = new();
             program.statements = new();
-            
-            while(curToken.m_Type != TokTypes.EOF)
+
+            while (!curToken_is(TokTypes.EOF))
             {
                 Statement stmt = parse_statement();
-                if(stmt != null)
+                if (stmt != null)
                 {
-                    append(ref program.statements, stmt);
+                    program.statements.Add(stmt);
                 }
                 next_token();
             }

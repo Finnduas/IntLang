@@ -77,6 +77,11 @@ namespace Tests
                 test_let_statement(stmt, testIdentifiers[i].expectedIdentifier);
             }
 
+            bool ok = par.check_for_parser_errors();
+            if(ok)
+            {
+                throw new Exception("The provided code has ERRORs -> check the console for further information");
+            }
             Console.WriteLine(j + " - ok");
         }
 
