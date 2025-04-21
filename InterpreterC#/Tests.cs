@@ -15,7 +15,7 @@ namespace Tests
     {
         public String expectedType;
         public String expectedLiteral;
-        public TestToken (String pET, String pEL)
+        public TestToken(String pET, String pEL)
         {
             expectedType = pET;
             expectedLiteral = pEL;
@@ -28,11 +28,11 @@ namespace Tests
             LexerManager lexerManager = new();
             lexerManager.init_lexer(input);
 
-            for (int i = 0; i<tests.Length; i++)
+            for (int i = 0; i < tests.Length; i++)
             {
                 Token tok = lexerManager.next_token();
 
-                if(tok.m_Type != tests[i].expectedType)
+                if (tok.m_Type != tests[i].expectedType)
                 {
                     throw new Exception("ERROR: tokenType wrong; expexted: " + (tests[i].expectedType) + " received: " + tok.m_Type + " at i = " + i);
                 }
@@ -43,7 +43,7 @@ namespace Tests
                 }
             }
 
-            Console.WriteLine(j +" - ok");
+            Console.WriteLine(j + " - ok");
         }
         internal struct TestIdentifier
         {
@@ -54,40 +54,48 @@ namespace Tests
                 expectedIdentifier = pEI;
             }
         }
-        public void test_parser(String input, TestIdentifier[] testIdentifiers, int j)
+        public void test_parser(String input, TestIdentifier[] testIdentifiers, int testIndex)
         {
             LexerManager lexMan = new();
             lexMan.init_lexer(input);
             Parser par = new(lexMan);
 
             InterpreterC_.Program program = par.parse_program();
-            if(program.token_literal() == "")
+            if (program.token_literal() == "")
             {
                 throw new Exception("ERROR: program does not contain anything!");
             }
-            
-            if(program.statements.Count != 3)
+
+            if (program.statements.Count != 3)
             {
                 throw new Exception("ERROR: program.statements does not contain 3 members");
             }
 
-            for(int i = 0; i < testIdentifiers.Length; i++)
+            for (int i = 0; i < testIdentifiers.Length; i++)
             {
                 Statement stmt = program.statements[i];
-                test_let_statement(stmt, testIdentifiers[i].expectedIdentifier);
+                switch (testIndex)
+                {
+                    case 0:
+                        test_let_statement(stmt, testIdentifiers[i].expectedIdentifier);
+                        break;
+                    case 1:
+                        test_return_statement(stmt);
+                        break;
+                }
             }
 
+
             bool ok = par.check_for_parser_errors();
-            if(ok)
+            if (!ok)
             {
                 throw new Exception("The provided code has ERRORs -> check the console for further information");
             }
-            Console.WriteLine(j + " - ok");
+            Console.WriteLine(testIndex + " - ok");
         }
-
-        void test_let_statement(Statement stmt, String exIdent)
+     void test_let_statement(Statement stmt, String exIdent)
         {
-            if(stmt.token_literal() != "let")
+            if (stmt.token_literal() != "let")
             {
                 throw new Exception("ERROR: statement is not 'let', got: " + stmt.token_literal());
             }
@@ -102,7 +110,7 @@ namespace Tests
                 letStmt = (LetStatement)stmt;
             }
 
-            if(letStmt.name.value != exIdent)
+            if (letStmt.name.value != exIdent)
             {
                 throw new Exception("ERROR: Identifier was not expected Identifier. Expected: " + exIdent + " | Received: " + letStmt.name.value);
             }
@@ -110,6 +118,21 @@ namespace Tests
             if (letStmt.name.token_literal() != exIdent)
             {
                 throw new Exception("ERROR: Identifiers token literal was NOT Identifiers value. Expected: " + exIdent + " | Received: " + letStmt.name.token_literal() + " - is the stmt to letStmt conversion faulty?");
+            }
+        }
+
+        void test_return_statement(Statement stmt)
+        {
+
+            if (stmt.token_literal() != "return")
+            {
+                throw new Exception("ERROR: statement is not 'return', got: " + stmt.token_literal());
+            }
+
+            bool ok = stmt is ReturnStatement retStmt;
+            if (!ok)
+            {
+                throw new Exception("ERROR: stmt is not ReturnStatement, got: " + stmt);
             }
         }
     }

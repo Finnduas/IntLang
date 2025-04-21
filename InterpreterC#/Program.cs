@@ -208,9 +208,16 @@ void parser_tests()
     +"let y = 10;\n"        
     +"let foobar = 838383;";
 
-    _Tests.TestIdentifier[] testIdenfiers0 = [new("x"), new("y"), new("foobar")];
+    _Tests.TestIdentifier[] testIdentifiers0 = [new("x"), new("y"), new("foobar")];
 
-    tests.test_parser(testInput0, testIdenfiers0, 0);
+    tests.test_parser(testInput0, testIdentifiers0, 0);
+
+    String testInput1 =
+      "return 5; \n"
+    + "return 10;\n"
+    + "return 993322;";
+
+    tests.test_parser(testInput1, testIdentifiers0 /*not used*/, 1);
 }
 
 void run_tests() 

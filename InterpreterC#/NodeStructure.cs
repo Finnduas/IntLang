@@ -39,6 +39,18 @@ namespace InterpreterC_
         public String token_literal() { return tok.m_Literal; }
     }
 
+    internal class ReturnStatement : Statement
+    {
+        public Token tok;
+        public Expression returnValue;
+
+        public String token_literal()
+        {
+            return tok.m_Literal;
+        }
+        public void statement_node() { }
+    }
+
     internal struct Program : Node
     {
         public List<Statement> statements;

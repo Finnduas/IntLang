@@ -35,18 +35,18 @@ namespace InterpreterC_
 
         public bool check_for_parser_errors()
         {
-            if (get_errors().Count == 0)
+            if (errors.Count == 0)
             {
-                return false;
+                return true;
             }
             else { 
 
             Console.WriteLine("Provided code has ERRORs:");
-            for (int i = 0; i < get_errors().Count; ++i)
+            for (int i = 0; i < errors.Count; ++i)
             {
-                Console.WriteLine(get_errors()[i]);
+                Console.WriteLine(errors[i]);
             }
-            return true;
+            return false;
             }
         }
 
@@ -107,11 +107,27 @@ namespace InterpreterC_
             stmt.name.value = curToken.m_Literal;
 
             //TODO: expressions should be parsed!!!, for now they're just skipped
-            while(!(curToken.m_Type == TokTypes.SEMICOLON))
+            while(curToken.m_Type != TokTypes.SEMICOLON)
             {
                 next_token();
             }
 
+            return stmt;
+        }
+
+        public ReturnStatement parse_return_statement()
+        {
+            ReturnStatement stmt = new();
+            stmt.tok = curToken;
+
+            next_token();
+            
+            //TODO: expression should be parsed! But I to lazy so skip.
+
+            while(curToken.m_Type != TokTypes.SEMICOLON)
+            {
+                next_token();
+            }
             return stmt;
         }
 
@@ -121,6 +137,8 @@ namespace InterpreterC_
             {
                 case TokTypes.LET:
                     return parse_let_statement();
+                case TokTypes.RETURN:
+                    return parse_return_statement();
                 default:
                     return null;
             }
