@@ -70,4 +70,15 @@
             }
         }
     }
+
+    public struct Precedence
+    {
+        public const int LOWEST = 0;
+        public const int EQUALS = 1;
+        public const int LESSGREATER = 2;
+        public const int SUM = 3;
+        public const int PRODUCT = 4;
+        public const int PREFIX = 5;
+        public const int CALL = 6;
+    }
 }

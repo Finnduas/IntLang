@@ -135,5 +135,70 @@ namespace Tests
                 throw new Exception("ERROR: stmt is not ReturnStatement, got: " + stmt);
             }
         }
+
+        public void test__string()
+        { 
+            InterpreterC_.Program pro = new();
+            pro.statements = new();
+            LetStatement letStmt = new();
+
+            letStmt.tok = new(TokTypes.LET, "let");
+            
+            letStmt.name = new Identifier();
+            letStmt.name.tok = new(TokTypes.IDENT, "myVar");
+            letStmt.name.value = "myVar";
+
+            InterpreterC_.Identifier ident = new();
+            ident.tok = new(TokTypes.IDENT, "myOtherVar");
+            ident.value = "myOtherVar";
+            letStmt.value = ident;
+            
+            
+            pro.statements.Add(letStmt);
+
+            if(pro._string() != "let myVar = myOtherVar;")
+            {
+                throw new Exception("ERROR: _string function does not work! Expected: " + "let myVar = myOtherVar;" + ", received: " + pro._string());
+            }
+            Console.WriteLine("_string() - ok");
+        }
+
+        public void test_expression_parsing()
+        {
+            String input = "foobar;";
+
+            InterpreterC_.LexerManager lexMan = new();
+            lexMan.init_lexer(input);
+            InterpreterC_.Parser par = new(lexMan);
+
+            InterpreterC_.Program pro = par.parse_program();
+            par.check_for_parser_errors();
+            if(pro.statements.Count != 1)
+            {
+                throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
+            }
+            bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement exStmt;
+            exStmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
+            if (!ok)
+            {
+                throw new Exception("ERROR: statement is not an ExpressionStatement, received: " + pro.statements[0]);
+            }
+
+            ok = exStmt.express is InterpreterC_.Identifier ident;
+            ident = (Identifier)exStmt.express;
+            if(!ok)
+            {
+                throw new Exception("ERROR: expression was not an identifier");
+            }
+            if(ident.value != "foobar")
+            {
+                throw new Exception("ERROR: identifier does not have correct value, received: " + ident.value);
+            }
+            if (ident.token_literal() != "foobar")
+            {
+                throw new Exception("ERROR: identifier does not have correct token literal, received: " + ident.token_literal());
+            }
+
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,10 +11,18 @@ namespace InterpreterC_
 {
     internal class Parser
     {
+
+        private delegate Expression parse_prefix_expression();
+        private delegate Expression parse_infix_expression(Expression before);
+
+        private Dictionary<String, parse_prefix_expression> prefixParsingFuncs;
+        private Dictionary<String, parse_infix_expression> infixParsingFuncs;
+
         private LexerManager lexMan;
 
         private Token curToken;
         private Token peekToken;
+
         private List<String> errors;
 
         public Parser(LexerManager pLexMan)
@@ -24,10 +33,21 @@ namespace InterpreterC_
             next_token();
         }
 
+        private void register_prefix_parsing_func(String tokType, parse_prefix_expression prefixFunc)
+        {
+            prefixParsingFuncs.Add(tokType, prefixFunc);
+        }
+
+        private void register_infix_parsing_func(String tokType, parse_infix_expression infixFunc)
+        {
+            infixParsingFuncs.Add(tokType, infixFunc);
+        }
+
         public List<String> get_errors()
         {
             return errors;
         }
+
         public void peek_error(String tokType)
         {
             errors.Add("expected next token to be " + tokType + ", got " + peekToken.m_Type);
@@ -57,7 +77,7 @@ namespace InterpreterC_
             peekToken = lexMan.next_token();
         }
 
-        bool curToken_is(String tokType)
+        private bool curToken_is(String tokType)
         {
             if (tokType == curToken.m_Type)
             {
@@ -69,7 +89,7 @@ namespace InterpreterC_
             }
         }
 
-        bool peekToken_is(String tokType)
+        private bool peekToken_is(String tokType)
         {
             if(tokType == peekToken.m_Type)
             {
@@ -81,7 +101,7 @@ namespace InterpreterC_
             }
         }
 
-        bool expected_peek(String tokType)
+        private bool expected_peek(String tokType)
         {
             if(peekToken_is(tokType)) {
                 next_token();
@@ -93,7 +113,7 @@ namespace InterpreterC_
                 return false;
             }
         }
-        public LetStatement parse_let_statement()
+        private LetStatement parse_let_statement()
         {
             LetStatement stmt = new();
             stmt.tok = curToken;
@@ -115,7 +135,7 @@ namespace InterpreterC_
             return stmt;
         }
 
-        public ReturnStatement parse_return_statement()
+        private ReturnStatement parse_return_statement()
         {
             ReturnStatement stmt = new();
             stmt.tok = curToken;
@@ -131,7 +151,33 @@ namespace InterpreterC_
             return stmt;
         }
 
-        public Statement parse_statement()
+        private Expression parse_expression(int precedence)
+        {
+            parse_prefix_expression prefix = prefixParsingFuncs[curToken.m_Type];
+            if(prefix == null)
+            {
+                return null;
+            }
+            Expression leftExpress = prefix();
+
+            return leftExpress;
+        }
+
+        private ExpressionStatement parse_expression_statement()
+        {
+            ExpressionStatement stmt = new();
+            stmt.tok = curToken;
+            stmt.express = parse_expression(Precedence.LOWEST);
+
+            if(peekToken_is(TokTypes.SEMICOLON))
+            {
+                next_token();
+            }
+
+            return stmt;
+        }
+
+        private Statement parse_statement()
         {
             switch(curToken.m_Type)
             {
@@ -140,7 +186,7 @@ namespace InterpreterC_
                 case TokTypes.RETURN:
                     return parse_return_statement();
                 default:
-                    return null;
+                    return parse_expression_statement();
             }
         }
 

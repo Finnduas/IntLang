@@ -218,6 +218,10 @@ void parser_tests()
     + "return 993322;";
 
     tests.test_parser(testInput1, testIdentifiers0 /*not used*/, 1);
+
+    tests.test__string();
+
+    tests.test_expression_parsing();
 }
 
 void run_tests() 
