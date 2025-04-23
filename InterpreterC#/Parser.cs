@@ -15,8 +15,8 @@ namespace InterpreterC_
         private delegate Expression parse_prefix_expression();
         private delegate Expression parse_infix_expression(Expression before);
 
-        private Dictionary<String, parse_prefix_expression> prefixParsingFuncs;
-        private Dictionary<String, parse_infix_expression> infixParsingFuncs;
+        private Dictionary<String, parse_prefix_expression> prefixParsingFuncs = new();
+        private Dictionary<String, parse_infix_expression> infixParsingFuncs = new();
 
         private LexerManager lexMan;
 
@@ -31,7 +31,43 @@ namespace InterpreterC_
             lexMan = pLexMan;
             next_token();
             next_token();
+
+            register_prefix_parsing_func(TokTypes.IDENT, parse_identifier);
+            register_prefix_parsing_func(TokTypes.INT, parse_IntegerLiteral);
         }
+
+        // expression parsing -----------------------------------------------------------------------------
+        private Expression parse_identifier()
+        {
+            Identifier ident = new();
+            ident.tok = curToken;
+            ident.value = curToken.m_Literal;
+
+            return ident;
+        }
+
+        private Expression parse_IntegerLiteral()
+        {
+            IntegerLiteral intLit = new();
+            intLit.tok = curToken;
+            try
+            {
+            intLit.value = int.Parse(curToken.m_Literal);
+            }
+            catch (OverflowException OEx)
+            {
+                errors.Add("Overflow when parsing Integerliteral to int in value field!");
+                return null;
+            }
+            catch (FormatException FEx)
+            {
+                errors.Add("Format wrong when parsing Integerliteral to int in value field!");
+                return null;
+            }
+
+            return intLit;
+        }
+        //-------------------------------------------------------------------------------------------------
 
         private void register_prefix_parsing_func(String tokType, parse_prefix_expression prefixFunc)
         {

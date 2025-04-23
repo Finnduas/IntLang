@@ -10,7 +10,7 @@ using System.Runtime.ExceptionServices;
 
 namespace Tests
 {
-
+    //TODO: make the testing structure homogenous
     struct TestToken
     {
         public String expectedType;
@@ -160,10 +160,10 @@ namespace Tests
             {
                 throw new Exception("ERROR: _string function does not work! Expected: " + "let myVar = myOtherVar;" + ", received: " + pro._string());
             }
-            Console.WriteLine("_string() - ok");
+            Console.WriteLine("3 - ok");
         }
 
-        public void test_expression_parsing()
+        public void test_identifier_expression_parsing()
         {
             String input = "foobar;";
 
@@ -198,7 +198,45 @@ namespace Tests
             {
                 throw new Exception("ERROR: identifier does not have correct token literal, received: " + ident.token_literal());
             }
+            Console.WriteLine("4 - ok");
+        }
 
+        public void test_integer_expression_parsing()
+        {
+            String input = "5;";
+
+            InterpreterC_.LexerManager lexMan = new();
+            lexMan.init_lexer(input);
+            InterpreterC_.Parser par = new(lexMan);
+
+            InterpreterC_.Program pro = par.parse_program();
+            par.check_for_parser_errors();
+            if (pro.statements.Count != 1)
+            {
+                throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
+            }
+            bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement exStmt;
+            exStmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
+            if (!ok)
+            {
+                throw new Exception("ERROR: statement is not an ExpressionStatement, received: " + pro.statements[0]);
+            }
+
+            ok = exStmt.express is InterpreterC_.IntegerLiteral intLit;
+            intLit = (IntegerLiteral)exStmt.express;
+            if (!ok)
+            {
+                throw new Exception("ERROR: expression was not an identifier");
+            }
+            if (intLit.value != 5)
+            {
+                throw new Exception("ERROR: identifier does not have correct value, received: " + intLit.value);
+            }
+            if (intLit.token_literal() != "5")
+            {
+                throw new Exception("ERROR: identifier does not have correct token literal, received: " + intLit.token_literal());
+            }
+            Console.WriteLine("5 - ok");
         }
     }
 }

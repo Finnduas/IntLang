@@ -37,6 +37,19 @@ namespace InterpreterC_
         }
     }
 
+    internal struct IntegerLiteral : Expression
+    {
+        public Token tok;
+        public int value;
+        public void expression_node() { }
+        public String token_literal() { return tok.m_Literal; }
+
+        public String _string()
+        {
+            return token_literal();
+        }
+    }
+
     internal class ExpressionStatement : Statement
     {
         public Token tok;

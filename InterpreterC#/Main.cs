@@ -221,17 +221,21 @@ void parser_tests()
 
     tests.test__string();
 
-    tests.test_expression_parsing();
+    tests.test_identifier_expression_parsing();
+
+    tests.test_integer_expression_parsing();
 }
 
 void run_tests() 
 {
     Console.WriteLine("Running lexer tests...");
     lexer_tests();
+    Console.WriteLine("");
     Console.WriteLine("Lexer tests passed!\n...");
 
     Console.WriteLine("Running parser tests...");
     parser_tests();
+    Console.WriteLine("");
     Console.WriteLine("Parser tests passed!");
 
     Console.WriteLine("---------------------------------");
