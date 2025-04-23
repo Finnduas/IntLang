@@ -224,6 +224,8 @@ void parser_tests()
     tests.test_identifier_expression_parsing();
 
     tests.test_integer_expression_parsing();
+
+    tests.test_parsing_prefix_expressions();
 }
 
 void run_tests() 

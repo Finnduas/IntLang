@@ -7,6 +7,7 @@ using InterpreterC_;
 using Lookup;
 using System.Runtime.InteropServices;
 using System.Runtime.ExceptionServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Tests
 {
@@ -63,12 +64,12 @@ namespace Tests
             InterpreterC_.Program program = par.parse_program();
             if (program.token_literal() == "")
             {
-                throw new Exception("ERROR: program does not contain anything!");
+                par.check_for_parser_errors(); throw new Exception("ERROR: program does not contain anything!");
             }
 
             if (program.statements.Count != 3)
             {
-                throw new Exception("ERROR: program.statements does not contain 3 members");
+                par.check_for_parser_errors(); throw new Exception("ERROR: program.statements does not contain 3 members");
             }
 
             for (int i = 0; i < testIdentifiers.Length; i++)
@@ -77,10 +78,10 @@ namespace Tests
                 switch (testIndex)
                 {
                     case 0:
-                        test_let_statement(stmt, testIdentifiers[i].expectedIdentifier);
+                        test_let_statement(stmt, testIdentifiers[i].expectedIdentifier, ref par);
                         break;
                     case 1:
-                        test_return_statement(stmt);
+                        test_return_statement(stmt, ref par);
                         break;
                 }
             }
@@ -89,21 +90,21 @@ namespace Tests
             bool ok = par.check_for_parser_errors();
             if (!ok)
             {
-                throw new Exception("The provided code has ERRORs -> check the console for further information");
+                par.check_for_parser_errors(); throw new Exception("The provided code has ERRORs -> check the console for further information");
             }
             Console.WriteLine(testIndex + " - ok");
         }
-     void test_let_statement(Statement stmt, String exIdent)
+        void test_let_statement(Statement stmt, String exIdent, ref Parser par)
         {
             if (stmt.token_literal() != "let")
             {
-                throw new Exception("ERROR: statement is not 'let', got: " + stmt.token_literal());
+                par.check_for_parser_errors(); throw new Exception("ERROR: statement is not 'let', got: " + stmt.token_literal());
             }
 
             bool ok = stmt is LetStatement letStmt;
             if (!ok)
             {
-                throw new Exception("ERROR: stmt is not LetStatement, got: " + stmt);
+                par.check_for_parser_errors(); throw new Exception("ERROR: stmt is not LetStatement, got: " + stmt);
             }
             else
             {
@@ -112,27 +113,27 @@ namespace Tests
 
             if (letStmt.name.value != exIdent)
             {
-                throw new Exception("ERROR: Identifier was not expected Identifier. Expected: " + exIdent + " | Received: " + letStmt.name.value);
+                par.check_for_parser_errors(); throw new Exception("ERROR: Identifier was not expected Identifier. Expected: " + exIdent + " | Received: " + letStmt.name.value);
             }
 
             if (letStmt.name.token_literal() != exIdent)
             {
-                throw new Exception("ERROR: Identifiers token literal was NOT Identifiers value. Expected: " + exIdent + " | Received: " + letStmt.name.token_literal() + " - is the stmt to letStmt conversion faulty?");
+                par.check_for_parser_errors(); throw new Exception("ERROR: Identifiers token literal was NOT Identifiers value. Expected: " + exIdent + " | Received: " + letStmt.name.token_literal() + " - is the stmt to letStmt conversion faulty?");
             }
         }
 
-        void test_return_statement(Statement stmt)
+        void test_return_statement(Statement stmt, ref Parser par)
         {
 
             if (stmt.token_literal() != "return")
             {
-                throw new Exception("ERROR: statement is not 'return', got: " + stmt.token_literal());
+                par.check_for_parser_errors(); throw new Exception("ERROR: statement is not 'return', got: " + stmt.token_literal());
             }
 
             bool ok = stmt is ReturnStatement retStmt;
             if (!ok)
             {
-                throw new Exception("ERROR: stmt is not ReturnStatement, got: " + stmt);
+                par.check_for_parser_errors(); throw new Exception("ERROR: stmt is not ReturnStatement, got: " + stmt);
             }
         }
 
@@ -175,28 +176,28 @@ namespace Tests
             par.check_for_parser_errors();
             if(pro.statements.Count != 1)
             {
-                throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
+                par.check_for_parser_errors(); throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
             }
             bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement exStmt;
             exStmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
             if (!ok)
             {
-                throw new Exception("ERROR: statement is not an ExpressionStatement, received: " + pro.statements[0]);
+                par.check_for_parser_errors(); throw new Exception("ERROR: statement is not an ExpressionStatement, received: " + pro.statements[0]);
             }
 
             ok = exStmt.express is InterpreterC_.Identifier ident;
             ident = (Identifier)exStmt.express;
             if(!ok)
             {
-                throw new Exception("ERROR: expression was not an identifier");
+                par.check_for_parser_errors(); par.check_for_parser_errors(); throw new Exception("ERROR: expression was not an identifier");
             }
             if(ident.value != "foobar")
             {
-                throw new Exception("ERROR: identifier does not have correct value, received: " + ident.value);
+                par.check_for_parser_errors(); throw new Exception("ERROR: identifier does not have correct value, received: " + ident.value);
             }
             if (ident.token_literal() != "foobar")
             {
-                throw new Exception("ERROR: identifier does not have correct token literal, received: " + ident.token_literal());
+                par.check_for_parser_errors(); throw new Exception("ERROR: identifier does not have correct token literal, received: " + ident.token_literal());
             }
             Console.WriteLine("4 - ok");
         }
@@ -210,33 +211,114 @@ namespace Tests
             InterpreterC_.Parser par = new(lexMan);
 
             InterpreterC_.Program pro = par.parse_program();
-            par.check_for_parser_errors();
             if (pro.statements.Count != 1)
             {
-                throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
+                par.check_for_parser_errors(); throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
             }
             bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement exStmt;
             exStmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
             if (!ok)
             {
-                throw new Exception("ERROR: statement is not an ExpressionStatement, received: " + pro.statements[0]);
+                par.check_for_parser_errors(); throw new Exception("ERROR: statement is not an ExpressionStatement, received: " + pro.statements[0]);
             }
 
             ok = exStmt.express is InterpreterC_.IntegerLiteral intLit;
             intLit = (IntegerLiteral)exStmt.express;
             if (!ok)
             {
-                throw new Exception("ERROR: expression was not an identifier");
+                par.check_for_parser_errors(); throw new Exception("ERROR: expression was not an identifier");
             }
             if (intLit.value != 5)
             {
-                throw new Exception("ERROR: identifier does not have correct value, received: " + intLit.value);
+                par.check_for_parser_errors(); throw new Exception("ERROR: identifier does not have correct value, received: " + intLit.value);
             }
             if (intLit.token_literal() != "5")
             {
-                throw new Exception("ERROR: identifier does not have correct token literal, received: " + intLit.token_literal());
+                par.check_for_parser_errors(); throw new Exception("ERROR: identifier does not have correct token literal, received: " + intLit.token_literal());
             }
             Console.WriteLine("5 - ok");
+        }
+
+        struct prefixTest
+        {
+            public String input;
+            public String _operator;
+            public int integerValue;
+        }
+        public void test_parsing_prefix_expressions()
+        {
+
+            prefixTest[] prefixTests = new prefixTest[2];
+            prefixTests[0] = new();
+            prefixTests[1] = new();
+            
+            prefixTests[0].input = "!5";
+            prefixTests[0]._operator = "!";
+            prefixTests[0].integerValue = 5;
+
+            prefixTests[1].input = "-15";
+            prefixTests[1]._operator = "-";
+            prefixTests[1].integerValue = 15;
+
+            // 0 = {"!5", "!", 5}; 1 = {"-15", "-", 15};
+
+            for(int i = 0; i < prefixTests.Length; ++i)
+            {
+                InterpreterC_.LexerManager lexMan = new();
+                lexMan.init_lexer(prefixTests[i].input);
+                InterpreterC_.Parser par = new(lexMan);
+                InterpreterC_.Program pro = par.parse_program();
+
+                if (pro.statements.Count != 1)
+                {
+                    par.check_for_parser_errors(); throw new Exception("ERROR: program contains " + pro.statements.Count + " statements; expected: 1");
+                }
+
+                bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement stmt;
+                stmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
+                if(!ok)
+                {
+                    par.check_for_parser_errors(); throw new Exception("ERROR: statement is not ExpressionStatement");
+                }
+
+                ok = stmt.express is InterpreterC_.PrefixExpression exp;
+                exp = (InterpreterC_.PrefixExpression)stmt.express;
+                if(!ok)
+                {
+                    par.check_for_parser_errors(); throw new Exception("ERROR: ExpressionStatements expression is not PrefixExpression, got: " + stmt.express);
+                }
+                if(exp._operator != prefixTests[i]._operator)
+                {
+                    par.check_for_parser_errors(); throw new Exception("ERROR: expression does not have correct operator, expected: " + prefixTests[i]._operator + ", got: " + exp._operator);
+                }
+                if(!test_integer_literal(exp.right, prefixTests[i].integerValue, ref par))
+                {
+                    return;
+                }
+            }
+
+            bool test_integer_literal(InterpreterC_.Expression exp, int value, ref Parser par) 
+            {
+                bool ok = exp is InterpreterC_.IntegerLiteral intLit;
+                intLit = (IntegerLiteral)exp;
+                if (!ok)
+                {
+                    par.check_for_parser_errors(); throw new Exception("ERROR: exp is not IntegerLiteral, got: " + exp);
+                    return false; // Unreachable, but principles are principles
+                }
+                if(intLit.value != value)
+                {
+                    par.check_for_parser_errors(); throw new Exception("ERROR: IntegerLiteral did not have expected value of " + value + ", received: " + intLit.value);
+                    return false;
+                }
+                if(intLit.token_literal() != value.ToString())
+                {
+                    par.check_for_parser_errors(); throw new Exception("FATAL ERROR: something has gone seriously wrong... Got: " + intLit.token_literal());
+                    return false;
+                }
+
+                return true;
+            }
         }
     }
 }

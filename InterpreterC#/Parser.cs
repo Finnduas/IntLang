@@ -34,6 +34,8 @@ namespace InterpreterC_
 
             register_prefix_parsing_func(TokTypes.IDENT, parse_identifier);
             register_prefix_parsing_func(TokTypes.INT, parse_IntegerLiteral);
+            register_prefix_parsing_func(TokTypes.MINUS, _parse_prefix_expression);
+            register_prefix_parsing_func(TokTypes.BANG, _parse_prefix_expression);
         }
 
         // expression parsing -----------------------------------------------------------------------------
@@ -66,6 +68,19 @@ namespace InterpreterC_
             }
 
             return intLit;
+        }
+
+        private Expression _parse_prefix_expression()
+        {
+            PrefixExpression exp = new();
+            exp.tok = curToken;
+            exp._operator = curToken.m_Literal;
+
+            next_token();
+
+            exp.right = parse_expression(Precedence.PREFIX);
+
+            return exp;
         }
         //-------------------------------------------------------------------------------------------------
 
@@ -189,11 +204,14 @@ namespace InterpreterC_
 
         private Expression parse_expression(int precedence)
         {
-            parse_prefix_expression prefix = prefixParsingFuncs[curToken.m_Type];
-            if(prefix == null)
+            bool ok = prefixParsingFuncs.ContainsKey(curToken.m_Type);
+            if(!ok)
             {
+                errors.Add("No parsing function found for token of type " + curToken.m_Type);
                 return null;
             }
+            parse_prefix_expression prefix = prefixParsingFuncs[curToken.m_Type];
+            
             Expression leftExpress = prefix();
 
             return leftExpress;
