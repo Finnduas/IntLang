@@ -18,6 +18,8 @@ namespace InterpreterC_
         private Dictionary<String, parse_prefix_expression> prefixParsingFuncs = new();
         private Dictionary<String, parse_infix_expression> infixParsingFuncs = new();
 
+        private Dictionary<String, int> precedences = new();
+
         private LexerManager lexMan;
 
         private Token curToken;
@@ -32,10 +34,52 @@ namespace InterpreterC_
             next_token();
             next_token();
 
+            init_precedences();
+
             register_prefix_parsing_func(TokTypes.IDENT, parse_identifier);
             register_prefix_parsing_func(TokTypes.INT, parse_IntegerLiteral);
             register_prefix_parsing_func(TokTypes.MINUS, _parse_prefix_expression);
             register_prefix_parsing_func(TokTypes.BANG, _parse_prefix_expression);
+
+            register_infix_parsing_func(TokTypes.LT, _parse_infix_expression);
+            register_infix_parsing_func(TokTypes.GT, _parse_infix_expression);
+            register_infix_parsing_func(TokTypes.PLUS, _parse_infix_expression);
+            register_infix_parsing_func(TokTypes.MINUS, _parse_infix_expression);
+            register_infix_parsing_func(TokTypes.EQ, _parse_infix_expression);
+            register_infix_parsing_func(TokTypes.NOT_EQ, _parse_infix_expression);
+            register_infix_parsing_func(TokTypes.ASTERISK, _parse_infix_expression);
+            register_infix_parsing_func(TokTypes.SLASH, _parse_infix_expression);
+        }
+
+        private void init_precedences()
+        {
+            precedences.Add(TokTypes.EQ, Precedence.EQUALS);
+            precedences.Add(TokTypes.NOT_EQ, Precedence.EQUALS);
+            precedences.Add(TokTypes.LT, Precedence.LESSGREATER);
+            precedences.Add(TokTypes.GT, Precedence.LESSGREATER);
+            precedences.Add(TokTypes.PLUS, Precedence.SUM);
+            precedences.Add(TokTypes.MINUS, Precedence.SUM);
+            precedences.Add(TokTypes.SLASH, Precedence.PRODUCT);
+            precedences.Add(TokTypes.ASTERISK, Precedence.PRODUCT);
+        }
+
+        private int peek_precedence()
+        {
+            if (precedences.ContainsKey(peekToken.m_Type))
+            {
+                return precedences[peekToken.m_Type];
+            }
+
+            return Precedence.LOWEST;
+        }
+        private int cur_precedence()
+        {
+            if (precedences.ContainsKey(curToken.m_Type))
+            {
+                return precedences[curToken.m_Type];
+            }
+
+            return Precedence.LOWEST;
         }
 
         // expression parsing -----------------------------------------------------------------------------
@@ -58,12 +102,12 @@ namespace InterpreterC_
             }
             catch (OverflowException OEx)
             {
-                errors.Add("Overflow when parsing Integerliteral to int in value field!");
+                errors.Add("Overflow when parsing Integerliteral to int in value field! - " + OEx.Message);
                 return null;
             }
             catch (FormatException FEx)
             {
-                errors.Add("Format wrong when parsing Integerliteral to int in value field!");
+                errors.Add("Format wrong when parsing Integerliteral to int in value field! - " + FEx.Message);
                 return null;
             }
 
@@ -82,6 +126,21 @@ namespace InterpreterC_
 
             return exp;
         }
+
+        private Expression _parse_infix_expression(Expression left)
+        {
+            InfixExpression exp = new();
+            exp.tok = curToken;
+            exp.left = left;
+            exp._operator = curToken.m_Literal;
+
+            int precedence = cur_precedence();
+            next_token();
+            exp.right = parse_expression(precedence);
+
+            return exp;
+        }
+       
         //-------------------------------------------------------------------------------------------------
 
         private void register_prefix_parsing_func(String tokType, parse_prefix_expression prefixFunc)
@@ -120,7 +179,6 @@ namespace InterpreterC_
             return false;
             }
         }
-
 
         public void next_token()
         {
@@ -213,6 +271,21 @@ namespace InterpreterC_
             parse_prefix_expression prefix = prefixParsingFuncs[curToken.m_Type];
             
             Expression leftExpress = prefix();
+
+            while (!peekToken_is(TokTypes.SEMICOLON) && precedence < peek_precedence())
+            {
+                bool parsingFuncExists = infixParsingFuncs.ContainsKey(peekToken.m_Type);
+                if (!parsingFuncExists)
+                {
+                    return leftExpress;
+                }
+
+                parse_infix_expression infix = infixParsingFuncs[peekToken.m_Type];
+
+                next_token();
+
+                leftExpress = infix(leftExpress);
+            }
 
             return leftExpress;
         }

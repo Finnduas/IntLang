@@ -8,6 +8,7 @@ using Lookup;
 using System.Runtime.InteropServices;
 using System.Runtime.ExceptionServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Reflection.Metadata;
 
 namespace Tests
 {
@@ -138,13 +139,13 @@ namespace Tests
         }
 
         public void test__string()
-        { 
+        {
             InterpreterC_.Program pro = new();
             pro.statements = new();
             LetStatement letStmt = new();
 
             letStmt.tok = new(TokTypes.LET, "let");
-            
+
             letStmt.name = new Identifier();
             letStmt.name.tok = new(TokTypes.IDENT, "myVar");
             letStmt.name.value = "myVar";
@@ -153,11 +154,11 @@ namespace Tests
             ident.tok = new(TokTypes.IDENT, "myOtherVar");
             ident.value = "myOtherVar";
             letStmt.value = ident;
-            
-            
+
+
             pro.statements.Add(letStmt);
 
-            if(pro._string() != "let myVar = myOtherVar;")
+            if (pro._string() != "let myVar = myOtherVar;")
             {
                 throw new Exception("ERROR: _string function does not work! Expected: " + "let myVar = myOtherVar;" + ", received: " + pro._string());
             }
@@ -174,7 +175,7 @@ namespace Tests
 
             InterpreterC_.Program pro = par.parse_program();
             par.check_for_parser_errors();
-            if(pro.statements.Count != 1)
+            if (pro.statements.Count != 1)
             {
                 par.check_for_parser_errors(); throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
             }
@@ -187,11 +188,11 @@ namespace Tests
 
             ok = exStmt.express is InterpreterC_.Identifier ident;
             ident = (Identifier)exStmt.express;
-            if(!ok)
+            if (!ok)
             {
                 par.check_for_parser_errors(); par.check_for_parser_errors(); throw new Exception("ERROR: expression was not an identifier");
             }
-            if(ident.value != "foobar")
+            if (ident.value != "foobar")
             {
                 par.check_for_parser_errors(); throw new Exception("ERROR: identifier does not have correct value, received: " + ident.value);
             }
@@ -251,7 +252,7 @@ namespace Tests
             prefixTest[] prefixTests = new prefixTest[2];
             prefixTests[0] = new();
             prefixTests[1] = new();
-            
+
             prefixTests[0].input = "!5";
             prefixTests[0]._operator = "!";
             prefixTests[0].integerValue = 5;
@@ -262,7 +263,7 @@ namespace Tests
 
             // 0 = {"!5", "!", 5}; 1 = {"-15", "-", 15};
 
-            for(int i = 0; i < prefixTests.Length; ++i)
+            for (int i = 0; i < prefixTests.Length; ++i)
             {
                 InterpreterC_.LexerManager lexMan = new();
                 lexMan.init_lexer(prefixTests[i].input);
@@ -276,49 +277,141 @@ namespace Tests
 
                 bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement stmt;
                 stmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
-                if(!ok)
+                if (!ok)
                 {
                     par.check_for_parser_errors(); throw new Exception("ERROR: statement is not ExpressionStatement");
                 }
 
                 ok = stmt.express is InterpreterC_.PrefixExpression exp;
                 exp = (InterpreterC_.PrefixExpression)stmt.express;
-                if(!ok)
+                if (!ok)
                 {
                     par.check_for_parser_errors(); throw new Exception("ERROR: ExpressionStatements expression is not PrefixExpression, got: " + stmt.express);
                 }
-                if(exp._operator != prefixTests[i]._operator)
+                if (exp._operator != prefixTests[i]._operator)
                 {
                     par.check_for_parser_errors(); throw new Exception("ERROR: expression does not have correct operator, expected: " + prefixTests[i]._operator + ", got: " + exp._operator);
                 }
-                if(!test_integer_literal(exp.right, prefixTests[i].integerValue, ref par))
-                {
-                    return;
-                }
+                test_integer_literal(exp.right, prefixTests[i].integerValue, ref par);
             }
 
-            bool test_integer_literal(InterpreterC_.Expression exp, int value, ref Parser par) 
+            Console.WriteLine("6 - ok");
+        }
+
+        public void test_integer_literal(InterpreterC_.Expression exp, int value, ref Parser par)
+        {
+            bool ok = exp is InterpreterC_.IntegerLiteral intLit;
+            intLit = (IntegerLiteral)exp;
+            if (!ok)
             {
-                bool ok = exp is InterpreterC_.IntegerLiteral intLit;
-                intLit = (IntegerLiteral)exp;
-                if (!ok)
+                par.check_for_parser_errors(); throw new Exception("ERROR: exp is not IntegerLiteral, got: " + exp);
+            }
+            if (intLit.value != value)
+            {
+                par.check_for_parser_errors(); throw new Exception("ERROR: IntegerLiteral did not have expected value of " + value + ", received: " + intLit.value);
+            }
+            if (intLit.token_literal() != value.ToString())
+            {
+                par.check_for_parser_errors(); throw new Exception("FATAL ERROR: something has gone seriously wrong... Got: " + intLit.token_literal());
+            }
+        }
+
+        internal struct infixTest
+        {
+            public String input;
+            public int leftValue;
+            public String _operator;
+            public int rightValue;
+
+            public infixTest(String pIn, int pLV, String pOp, int pRV)
+            {
+                input = pIn;
+                leftValue = pLV;
+                _operator = pOp;
+                rightValue = pRV;
+            }
+        }
+
+        public void test_parsing_infix_expressions()
+        {
+            infixTest[] infixTests = new infixTest[8];
+            infixTests[0] = new("5 + 5", 5, "+", 5);
+            infixTests[1] = new("5 - 5", 5, "-", 5);
+            infixTests[2] = new("5 * 5", 5, "*", 5);
+            infixTests[3] = new("5 / 5", 5, "/", 5);
+            infixTests[4] = new("5 < 5", 5, "<", 5);
+            infixTests[5] = new("5 > 5", 5, ">", 5);
+            infixTests[6] = new("5 == 5", 5, "==", 5);
+            infixTests[7] = new("5 != 5", 5, "!=", 5);
+
+
+            for (int i = 0; i < infixTests.Length; ++i)
+            {
+                InterpreterC_.LexerManager lexMan = new();
+                lexMan.init_lexer(infixTests[i].input);
+                InterpreterC_.Parser par = new(lexMan);
+                InterpreterC_.Program pro = par.parse_program();
+
+                if(pro.statements.Count != 1)
                 {
-                    par.check_for_parser_errors(); throw new Exception("ERROR: exp is not IntegerLiteral, got: " + exp);
-                    return false; // Unreachable, but principles are principles
-                }
-                if(intLit.value != value)
-                {
-                    par.check_for_parser_errors(); throw new Exception("ERROR: IntegerLiteral did not have expected value of " + value + ", received: " + intLit.value);
-                    return false;
-                }
-                if(intLit.token_literal() != value.ToString())
-                {
-                    par.check_for_parser_errors(); throw new Exception("FATAL ERROR: something has gone seriously wrong... Got: " + intLit.token_literal());
-                    return false;
+                    par.check_for_parser_errors(); throw new Exception("ERROR: expexted one statement, received: " + pro.statements.Count);
                 }
 
-                return true;
+                bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement exStmt;
+                exStmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
+                if(!ok)
+                {
+                    par.check_for_parser_errors(); throw new Exception("ERROR: the statement is not ExpressionStatement, received: " + pro.statements[0]);
+                }
+
+                ok = exStmt.express is InterpreterC_.InfixExpression infExp;
+                infExp = (InterpreterC_.InfixExpression)exStmt.express;
+                if(!ok)
+                {
+                    par.check_for_parser_errors(); throw new Exception("ERROR: expression is not InfixExpression, received: " + exStmt.express);
+                }
+
+                test_integer_literal(infExp.left, infixTests[i].leftValue, ref par);
+                test_integer_literal(infExp.right, infixTests[i].rightValue, ref par);
             }
+
+            Console.WriteLine("7 - ok");
+        }
+
+        struct PrecedenceTest
+        {
+            public String input;
+            public String expected;
+
+            public PrecedenceTest(String pIn, String pEx)
+            {
+                input = pIn;
+                expected = pEx;
+            }
+        }
+        public void test_precedence_parsing()
+        {
+            PrecedenceTest[] precedenceTests = new PrecedenceTest[4];
+            precedenceTests[0] = new("!-a", "(!(-a))");
+            precedenceTests[1] = new("-a * b / c", "(((-a) * b) / c)");
+            precedenceTests[2] = new("a * b / c + e * 5 - f", "((((a * b) / c) + (e * 5)) - f)");
+            precedenceTests[3] = new("a + b; a * b", "(a + b)(a * b)");
+
+            for (int i = 0; i < precedenceTests.Length; ++i)
+            {
+                InterpreterC_.LexerManager lexMan = new();
+                lexMan.init_lexer(precedenceTests[i].input);
+                InterpreterC_.Parser par = new(lexMan);
+                InterpreterC_.Program pro = par.parse_program();
+
+                String actual = pro._string();
+                if (actual != precedenceTests[i].expected)
+                {
+                    throw new Exception("ERROR: failed to parse precedence correctly! Expected: " + precedenceTests[i].expected + ", got: " + actual);
+                }
+            }
+
+            Console.WriteLine("8 - ok");
         }
     }
 }

@@ -226,6 +226,10 @@ void parser_tests()
     tests.test_integer_expression_parsing();
 
     tests.test_parsing_prefix_expressions();
+
+    tests.test_parsing_infix_expressions();
+
+    tests.test_precedence_parsing();
 }
 
 void run_tests() 

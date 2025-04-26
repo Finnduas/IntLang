@@ -51,6 +51,21 @@ namespace InterpreterC_
         }
     }
 
+    internal struct InfixExpression : Expression
+    {
+        public Token tok;
+        public Expression left;
+        public String _operator;
+        public Expression right;
+        public void expression_node() { }
+        public String token_literal() { return tok.m_Literal; }
+
+        public String _string()
+        {
+            return "(" + left._string() + " " + _operator + " " + right._string() + ")";
+        }
+    }
+
     internal struct IntegerLiteral : Expression
     {
         public Token tok;
