@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.ExceptionServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Tests
 {
@@ -169,9 +170,9 @@ namespace Tests
         {
             String input = "foobar;";
 
-            InterpreterC_.LexerManager lexMan = new();
+            LexerManager lexMan = new();
             lexMan.init_lexer(input);
-            InterpreterC_.Parser par = new(lexMan);
+            Parser par = new(lexMan);
 
             InterpreterC_.Program pro = par.parse_program();
             par.check_for_parser_errors();
@@ -192,14 +193,9 @@ namespace Tests
             {
                 par.check_for_parser_errors(); par.check_for_parser_errors(); throw new Exception("ERROR: expression was not an identifier");
             }
-            if (ident.value != "foobar")
-            {
-                par.check_for_parser_errors(); throw new Exception("ERROR: identifier does not have correct value, received: " + ident.value);
-            }
-            if (ident.token_literal() != "foobar")
-            {
-                par.check_for_parser_errors(); throw new Exception("ERROR: identifier does not have correct token literal, received: " + ident.token_literal());
-            }
+
+            test_identifier(ident, "foobar", ref par);
+
             Console.WriteLine("4 - ok");
         }
 
@@ -265,9 +261,9 @@ namespace Tests
 
             for (int i = 0; i < prefixTests.Length; ++i)
             {
-                InterpreterC_.LexerManager lexMan = new();
+                LexerManager lexMan = new();
                 lexMan.init_lexer(prefixTests[i].input);
-                InterpreterC_.Parser par = new(lexMan);
+                Parser par = new(lexMan);
                 InterpreterC_.Program pro = par.parse_program();
 
                 if (pro.statements.Count != 1)
@@ -275,15 +271,15 @@ namespace Tests
                     par.check_for_parser_errors(); throw new Exception("ERROR: program contains " + pro.statements.Count + " statements; expected: 1");
                 }
 
-                bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement stmt;
-                stmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
+                bool ok = pro.statements[0] is ExpressionStatement stmt;
+                stmt = (ExpressionStatement)pro.statements[0];
                 if (!ok)
                 {
                     par.check_for_parser_errors(); throw new Exception("ERROR: statement is not ExpressionStatement");
                 }
 
-                ok = stmt.express is InterpreterC_.PrefixExpression exp;
-                exp = (InterpreterC_.PrefixExpression)stmt.express;
+                ok = stmt.express is PrefixExpression exp;
+                exp = (PrefixExpression)stmt.express;
                 if (!ok)
                 {
                     par.check_for_parser_errors(); throw new Exception("ERROR: ExpressionStatements expression is not PrefixExpression, got: " + stmt.express);
@@ -314,6 +310,64 @@ namespace Tests
             {
                 par.check_for_parser_errors(); throw new Exception("FATAL ERROR: something has gone seriously wrong... Got: " + intLit.token_literal());
             }
+        }
+
+        void test_identifier(InterpreterC_.Expression exp, String value, ref Parser par)
+        {
+            bool ok = exp is Identifier ident;
+            ident = (Identifier)exp;
+            if(!ok)
+            {
+                par.check_for_parser_errors(); throw new Exception("ERROR: expression is not identifier!");
+            }
+            if(ident.value != value)
+            {
+                par.check_for_parser_errors(); throw new Exception("ERROR: identifier does not have expected value of " + value + ", received " + ident.value);
+            }
+            if (ident.token_literal() != value)
+            {
+                par.check_for_parser_errors(); throw new Exception("ERROR: identifiers token literal does not have expected value of " + value + ", received " + ident.token_literal());
+            }
+        }
+
+        void test_literalExpression(ref Parser par, Expression exp, String expected, String type)
+        {
+            switch(type)
+            {
+                case "int":
+                    int tmp = int.Parse(expected);
+                    test_integer_literal(exp, tmp, ref par);
+                    break;
+                case "string":
+                    test_identifier(exp, expected, ref par);
+                    break;
+            }
+        }
+
+        void test_infix_expression(Expression exp, String left, String leftType, String _operator, String right, String rightType, ref Parser par)
+        {
+            if (left == null) 
+            { 
+                throw new ArgumentNullException(nameof(left));
+            }
+            if (right == null)
+            {
+                throw new ArgumentNullException(nameof(left));
+            }
+
+            bool ok = exp is InfixExpression infx;
+            infx = (InfixExpression)exp;
+            if(!ok)
+            {
+                par.check_for_parser_errors(); throw new Exception("ERROR: Expression is not InfixExpression");
+            }
+
+            test_literalExpression(ref par, infx.left, left, leftType);
+            if (infx._operator != _operator)
+            {
+                par.check_for_parser_errors(); throw new Exception("ERROR: operator is not expected operator ( " + _operator + " )");
+            }
+            test_literalExpression(ref par, infx.right, right, rightType);
         }
 
         internal struct infixTest
@@ -356,23 +410,23 @@ namespace Tests
                 {
                     par.check_for_parser_errors(); throw new Exception("ERROR: expexted one statement, received: " + pro.statements.Count);
                 }
-
-                bool ok = pro.statements[0] is InterpreterC_.ExpressionStatement exStmt;
-                exStmt = (InterpreterC_.ExpressionStatement)pro.statements[0];
+                bool ok = pro.statements[0] is ExpressionStatement expStmt;
+                expStmt = (ExpressionStatement)pro.statements[0];
                 if(!ok)
                 {
-                    par.check_for_parser_errors(); throw new Exception("ERROR: the statement is not ExpressionStatement, received: " + pro.statements[0]);
+                    par.check_for_parser_errors(); throw new Exception("ERROR: Statement is not ExpressionStatement, received: " + pro.statements[0]);
                 }
 
-                ok = exStmt.express is InterpreterC_.InfixExpression infExp;
-                infExp = (InterpreterC_.InfixExpression)exStmt.express;
-                if(!ok)
-                {
-                    par.check_for_parser_errors(); throw new Exception("ERROR: expression is not InfixExpression, received: " + exStmt.express);
-                }
-
-                test_integer_literal(infExp.left, infixTests[i].leftValue, ref par);
-                test_integer_literal(infExp.right, infixTests[i].rightValue, ref par);
+                test_infix_expression
+                    (
+                    expStmt.express, 
+                    infixTests[i].leftValue.ToString(), 
+                    "int", 
+                    infixTests[i]._operator, 
+                    infixTests[i].rightValue.ToString(), 
+                    "int", 
+                    ref par
+                    );
             }
 
             Console.WriteLine("7 - ok");
