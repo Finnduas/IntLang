@@ -26,27 +26,191 @@ namespace Tests
     }
     internal class _Tests
     {
-        public void test_lexer(String input, TestToken[] tests, int j)
+        public void test_lexer()
         {
-            LexerManager lexerManager = new();
-            lexerManager.init_lexer(input);
-
-            for (int i = 0; i < tests.Length; i++)
+            String[] inputs = new String[]
             {
-                Token tok = lexerManager.next_token();
+                "=+(){},;*/-",
 
-                if (tok.m_Type != tests[i].expectedType)
+                  "let five = 5;"
+                + "let ten = 10;"
+                + "let add = fn(x, y) {"
+                + "x + y;"
+                + "};"
+                + "let result = add(five, ten) ;",
+
+                  "10 == 10;"
+                + "10 != 9;"
+                + "!-/*5;"
+                + "5 < 10 > 5;"
+                + "\n"
+                + "if (5 < 10) {\n"
+                + "return true;"
+                + "} else {\n"
+                + "return false;"
+                + "}"
+                + "let five = 5;"
+                + "let ten = 10;"
+                + "let add = fn(x, y) {"
+                + "x + y;"
+                + "};"
+                + "let result = add(five, ten) ;"
+            };
+                
+        TestToken[][] tests =
+            {
+                [
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.PLUS, "+"),
+                    new(TokTypes.LPAREN, "("),
+                    new(TokTypes.RPAREN, ")"),
+                    new(TokTypes.LBRACE, "{"),
+                    new(TokTypes.RBRACE, "}"),
+                    new(TokTypes.COMMA, ","),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.ASTERISK, "*"),
+                    new(TokTypes.SLASH, "/"),
+                    new(TokTypes.MINUS, "-"),
+                    new(TokTypes.EOF, "")
+                ],
+                [
+                    new(TokTypes.LET, "let"),
+                    new(TokTypes.IDENT, "five"),
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.INT, "5"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.LET, "let"),
+                    new(TokTypes.IDENT, "ten"),
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.INT, "10"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.LET, "let"),
+                    new(TokTypes.IDENT, "add"),
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.FUNCTION, "fn"),
+                    new(TokTypes.LPAREN, "("),
+                    new(TokTypes.IDENT, "x"),
+                    new(TokTypes.COMMA, ","),
+                    new(TokTypes.IDENT, "y"),
+                    new(TokTypes.RPAREN, ")"),
+                    new(TokTypes.LBRACE, "{"),
+                    new(TokTypes.IDENT, "x"),
+                    new(TokTypes.PLUS, "+"),
+                    new(TokTypes.IDENT, "y"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.RBRACE, "}"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.LET, "let"),
+                    new(TokTypes.IDENT, "result"),
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.IDENT, "add"),
+                    new(TokTypes.LPAREN, "("),
+                    new(TokTypes.IDENT, "five"),
+                    new(TokTypes.COMMA, ","),
+                    new(TokTypes.IDENT, "ten"),
+                    new(TokTypes.RPAREN, ")"),
+                    new(TokTypes.SEMICOLON, ";")
+                ],
+                [
+                    new(TokTypes.INT, "10"),
+                    new(TokTypes.EQ, "=="),
+                    new(TokTypes.INT, "10"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.INT, "10"),
+                    new(TokTypes.NOT_EQ, "!="),
+                    new(TokTypes.INT, "9"),
+                    new(TokTypes.SEMICOLON, ";"),
+
+                    new(TokTypes.BANG, "!"),
+                    new(TokTypes.MINUS, "-"),
+                    new(TokTypes.SLASH, "/"),
+                    new(TokTypes.ASTERISK, "*"),
+                    new(TokTypes.INT, "5"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.INT, "5"),
+                    new(TokTypes.LT, "<"),
+                    new(TokTypes.INT, "10"),
+                    new(TokTypes.GT, ">"),
+                    new(TokTypes.INT, "5"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.IF, "if"),
+                    new(TokTypes.LPAREN, "("),
+                    new(TokTypes.INT, "5"),
+                    new(TokTypes.LT, "<"),
+                    new(TokTypes.INT, "10"),
+                    new(TokTypes.RPAREN, ")"),
+                    new(TokTypes.LBRACE, "{"),
+                    new(TokTypes.RETURN, "return"),
+                    new(TokTypes.TRUE, "true"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.RBRACE, "}"),
+                    new(TokTypes.ELSE, "else"),
+                    new(TokTypes.LBRACE, "{"),
+                    new(TokTypes.RETURN, "return"),
+                    new(TokTypes.FALSE, "false"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.RBRACE, "}"),
+
+                    new(TokTypes.LET, "let"),
+                    new(TokTypes.IDENT, "five"),
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.INT, "5"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.LET, "let"),
+                    new(TokTypes.IDENT, "ten"),
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.INT, "10"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.LET, "let"),
+                    new(TokTypes.IDENT, "add"),
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.FUNCTION, "fn"),
+                    new(TokTypes.LPAREN, "("),
+                    new(TokTypes.IDENT, "x"),
+                    new(TokTypes.COMMA, ","),
+                    new(TokTypes.IDENT, "y"),
+                    new(TokTypes.RPAREN, ")"),
+                    new(TokTypes.LBRACE, "{"),
+                    new(TokTypes.IDENT, "x"),
+                    new(TokTypes.PLUS, "+"),
+                    new(TokTypes.IDENT, "y"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.RBRACE, "}"),
+                    new(TokTypes.SEMICOLON, ";"),
+                    new(TokTypes.LET, "let"),
+                    new(TokTypes.IDENT, "result"),
+                    new(TokTypes.ASSIGN, "="),
+                    new(TokTypes.IDENT, "add"),
+                    new(TokTypes.LPAREN, "("),
+                    new(TokTypes.IDENT, "five"),
+                    new(TokTypes.COMMA, ","),
+                    new(TokTypes.IDENT, "ten"),
+                    new(TokTypes.RPAREN, ")"),
+                    new(TokTypes.SEMICOLON, ";")
+                ]
+            };
+
+            for (int i = 0; i < inputs.Length; ++i) { 
+                LexerManager lexerManager = new();
+                lexerManager.init_lexer(inputs[i]);
+
+                for (int j = 0; j < tests.GetLength(0); ++j)
                 {
-                    throw new Exception("ERROR: tokenType wrong; expexted: " + (tests[i].expectedType) + " received: " + tok.m_Type + " at i = " + i);
+                    Token tok = lexerManager.next_token();
+
+                    if (tok.m_Type != tests[i][j].expectedType)
+                    {
+                        throw new Exception("ERROR: tokenType wrong; expexted: " + (tests[i][j].expectedType) + " received: " + tok.m_Type + " at i = " + i);
+                    }
+
+                    if (tok.m_Literal != tests[i][j].expectedLiteral)
+                    {
+                        throw new Exception("ERROR: tokenLiteral wrong; expexted: " + (tests[i][j].expectedLiteral) + " received: " + tok.m_Literal + " at i = " + i);
+                    }
                 }
 
-                if (tok.m_Literal != tests[i].expectedLiteral)
-                {
-                    throw new Exception("ERROR: tokenLiteral wrong; expexted: " + (tests[i].expectedLiteral) + " received: " + tok.m_Literal + " at i = " + i);
-                }
+                Console.WriteLine(i + " - ok");
             }
-
-            Console.WriteLine(j + " - ok");
         }
         internal struct TestIdentifier
         {
@@ -57,10 +221,23 @@ namespace Tests
                 expectedIdentifier = pEI;
             }
         }
-        public void test_parser(String input, TestIdentifier[] testIdentifiers, int testIndex)
+        public void test_parser()
         {
+
+            String letInput =
+              "let x = 5; \n"
+            + "let y = 10;\n"
+            + "let foobar = 838383;";
+
+            TestIdentifier[] testIdentifiers = [new("x"), new("y"), new("foobar")];
+
+            String returnInput =
+              "return 5; \n"
+            + "return 10;\n"
+            + "return 993322;";
+
             LexerManager lexMan = new();
-            lexMan.init_lexer(input);
+            lexMan.init_lexer(letInput);
             Parser par = new(lexMan);
 
             InterpreterC_.Program program = par.parse_program();
@@ -74,27 +251,45 @@ namespace Tests
                 par.check_for_parser_errors(); throw new Exception("ERROR: program.statements does not contain 3 members");
             }
 
-            for (int i = 0; i < testIdentifiers.Length; i++)
+            for (int i = 0; i < testIdentifiers.Length; ++i)
             {
                 Statement stmt = program.statements[i];
-                switch (testIndex)
-                {
-                    case 0:
-                        test_let_statement(stmt, testIdentifiers[i].expectedIdentifier, ref par);
-                        break;
-                    case 1:
-                        test_return_statement(stmt, ref par);
-                        break;
-                }
-            }
 
+                test_let_statement(stmt, testIdentifiers[i].expectedIdentifier, ref par);
+            }
 
             bool ok = par.check_for_parser_errors();
             if (!ok)
             {
                 par.check_for_parser_errors(); throw new Exception("The provided code has ERRORs -> check the console for further information");
             }
-            Console.WriteLine(testIndex + " - ok");
+            Console.WriteLine(0 + " - ok");
+            
+            lexMan.init_lexer(returnInput);
+            Parser par1 = new(lexMan);
+
+            InterpreterC_.Program program1 = par1.parse_program();
+            if (program.token_literal() == "")
+            {
+                par1.check_for_parser_errors(); throw new Exception("ERROR: program does not contain anything!");
+            }
+
+            if (program.statements.Count != 3)
+            {
+                par1.check_for_parser_errors(); throw new Exception("ERROR: program.statements does not contain 3 members");
+            }
+
+            for (int i = 0; i < program1.statements.Count; ++i)
+            {
+                Statement stmt = program1.statements[i];
+                test_return_statement(stmt, ref par);
+            }
+            bool ok1 = par.check_for_parser_errors();
+            if (!ok1)
+            {
+                par.check_for_parser_errors(); throw new Exception("The provided code has ERRORs -> check the console for further information");
+            }
+            Console.WriteLine(1 + " - ok");
         }
         void test_let_statement(Statement stmt, String exIdent, ref Parser par)
         {
