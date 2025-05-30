@@ -51,6 +51,8 @@ void parser_tests()
     tests.test_parsing_infix_expressions();
 
     tests.test_precedence_parsing();
+
+    tests.test_boolean_expression_parsing();
 }
 
 void run_tests() 

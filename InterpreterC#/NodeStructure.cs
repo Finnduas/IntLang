@@ -79,6 +79,28 @@ namespace InterpreterC_
         }
     }
 
+    struct Boolean : Expression
+    {
+        public Token tok;
+        public bool value;
+
+        public Boolean(Token pT, bool pV)
+        {
+            tok = pT;
+            value = pV;
+        }
+
+        public void expression_node(){ }
+        public String token_literal()
+        {
+            return tok.m_Literal;
+        }
+        public String _string()
+        {
+            return tok.m_Literal;
+        }
+    }
+
     internal class ExpressionStatement : Statement
     {
         public Token tok;
@@ -149,6 +171,8 @@ namespace InterpreterC_
             return s;
         }
     }
+
+    
 
     internal struct Program : Node
     {

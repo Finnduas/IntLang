@@ -40,6 +40,9 @@ namespace InterpreterC_
             register_prefix_parsing_func(TokTypes.INT, parse_IntegerLiteral);
             register_prefix_parsing_func(TokTypes.MINUS, _parse_prefix_expression);
             register_prefix_parsing_func(TokTypes.BANG, _parse_prefix_expression);
+            register_prefix_parsing_func(TokTypes.TRUE, parse_boolean);
+            register_prefix_parsing_func(TokTypes.FALSE, parse_boolean);
+            register_prefix_parsing_func(TokTypes.LPAREN, parse_grouped_expression);
 
             register_infix_parsing_func(TokTypes.LT, _parse_infix_expression);
             register_infix_parsing_func(TokTypes.GT, _parse_infix_expression);
@@ -83,6 +86,25 @@ namespace InterpreterC_
         }
 
         // expression parsing -----------------------------------------------------------------------------
+
+        private Expression parse_grouped_expression()
+        {
+            next_token();
+            Expression exp = parse_expression(Precedence.LOWEST);
+            if(!expected_peek(TokTypes.RPAREN))
+            {
+                return null;
+            }
+
+            return exp;
+        }
+
+        private Expression parse_boolean()
+        {
+            Boolean _bool = new(curToken,  false ? curToken.m_Literal == TokTypes.TRUE : true);
+            return _bool;
+        }
+        
         private Expression parse_identifier()
         {
             Identifier ident = new();
