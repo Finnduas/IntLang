@@ -43,6 +43,7 @@ namespace InterpreterC_
             register_prefix_parsing_func(TokTypes.TRUE, parse_boolean);
             register_prefix_parsing_func(TokTypes.FALSE, parse_boolean);
             register_prefix_parsing_func(TokTypes.LPAREN, parse_grouped_expression);
+            register_prefix_parsing_func(TokTypes.IF, parse_if_expression);
 
             register_infix_parsing_func(TokTypes.LT, _parse_infix_expression);
             register_infix_parsing_func(TokTypes.GT, _parse_infix_expression);
@@ -86,6 +87,68 @@ namespace InterpreterC_
         }
 
         // expression parsing -----------------------------------------------------------------------------
+        private BlockStatement parse_block_statement()
+        {
+            BlockStatement block = new();
+            block.tok = curToken;
+            block.statements = new();
+
+            next_token();
+
+            while (!curToken_is(TokTypes.RBRACE) && !curToken_is(TokTypes.EOF)) 
+            {
+                Statement stmt = parse_statement();
+                if(stmt != null) 
+                {
+                    block.statements.Add(stmt);
+                }
+                next_token();
+            }
+
+            return block;
+        }
+
+        private Expression parse_if_expression()
+        {
+            IfExpression exp = new();
+            exp.tok = curToken;
+
+            if(!expected_peek(TokTypes.LPAREN))
+            {
+                return null;
+            }
+
+            next_token();
+
+            exp.condition = parse_expression(Precedence.LOWEST);
+
+            if(!expected_peek(TokTypes.RPAREN))
+            {
+                return null;
+            }
+
+            if(!expected_peek(TokTypes.LBRACE))
+            {
+                return null;
+            }
+
+            exp.consequence = parse_block_statement();
+
+            if(peekToken_is(TokTypes.ELSE)) 
+            {
+                next_token();
+
+                if (!expected_peek(TokTypes.LBRACE))
+                {
+                    return null;
+                }
+
+                exp.alternative = parse_block_statement();
+
+            }
+
+            return exp;
+        }
 
         private Expression parse_grouped_expression()
         {
@@ -244,9 +307,9 @@ namespace InterpreterC_
                 return false;
             }
         }
-        private LetStatement parse_let_statement()
+        private VarStatement parse_var_statement()
         {
-            LetStatement stmt = new();
+            VarStatement stmt = new();
             stmt.tok = curToken;
 
             if(!expected_peek(TokTypes.IDENT))
@@ -330,8 +393,8 @@ namespace InterpreterC_
         {
             switch(curToken.m_Type)
             {
-                case TokTypes.LET:
-                    return parse_let_statement();
+                case TokTypes.VAR:
+                    return parse_var_statement();
                 case TokTypes.RETURN:
                     return parse_return_statement();
                 default:

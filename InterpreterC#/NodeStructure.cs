@@ -120,7 +120,7 @@ namespace InterpreterC_
         }
     }
 
-    internal class LetStatement : Statement
+    internal class VarStatement : Statement
     {
         public Token tok;
         public Identifier name;
@@ -172,8 +172,55 @@ namespace InterpreterC_
         }
     }
 
-    
+    internal class BlockStatement : Statement
+    {
+        public Token tok;
+        public List<Statement> statements;
+        public void statement_node() { }
+        public String token_literal()
+        {
+            return tok.m_Literal;
+        }
+        public String _string()
+        {
+            String tmp = "";
+            for(int i = 0; i < statements.Count; ++i)
+            {
+                tmp += statements[i]._string();
+            }
+            return tmp;
+        }
+    }
 
+    internal class IfExpression : Expression
+    {
+        public Token tok;
+        public Expression condition;
+        public BlockStatement consequence;
+        public BlockStatement alternative;
+
+        public void expression_node() { }
+        public String token_literal()
+        {
+            return tok.m_Literal;
+        }
+        public String _string()
+        {
+            String tmp = "";
+            tmp += "if";
+            tmp += condition._string();
+            tmp += " ";
+            tmp += consequence._string();
+
+            if (alternative != null) {
+                tmp += "else";
+                tmp += alternative._string();
+            }
+
+            return tmp;
+    
+        }
+    }
     internal struct Program : Node
     {
         public List<Statement> statements;

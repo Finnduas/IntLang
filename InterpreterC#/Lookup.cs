@@ -30,7 +30,7 @@
         public const String RBRACE = "}";
 
         public const String FUNCTION = "FUNCTION";
-        public const String LET = "LET";
+        public const String VAR = "VAR";
         public const String TRUE = "TRUE";
         public const String FALSE = "FALSE";
         public const String IF = "IF";
@@ -44,7 +44,7 @@
         public Dictionary<String, String> keyWords = new Dictionary<String, String>
         {
             {"fn" , TokTypes.FUNCTION},
-            {"let" , TokTypes.LET},
+            {"var" , TokTypes.VAR},
             {"true" , TokTypes.TRUE},
             {"false" , TokTypes.FALSE},
             {"if" , TokTypes.IF},

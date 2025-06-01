@@ -53,6 +53,8 @@ void parser_tests()
     tests.test_precedence_parsing();
 
     tests.test_boolean_expression_parsing();
+    
+    tests.test_if_else_Expression();
 }
 
 void run_tests() 

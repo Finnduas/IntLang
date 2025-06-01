@@ -13,7 +13,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Tests
 {
-    //TODO: make the testing structure homogenous
+    //TODO: make the testing structure homogenous - done ish - love that by the way - why tf am I talking to myself - ok enough. seriously
     struct TestToken
     {
         public String expectedType;
@@ -32,12 +32,12 @@ namespace Tests
             {
                 "=+(){},;*/-",
 
-                  "let five = 5;"
-                + "let ten = 10;"
-                + "let add = fn(x, y) {"
+                  "var five = 5;"
+                + "var ten = 10;"
+                + "var add = fn(x, y) {"
                 + "x + y;"
                 + "};"
-                + "let result = add(five, ten) ;",
+                + "var result = add(five, ten) ;",
 
                   "10 == 10;"
                 + "10 != 9;"
@@ -49,12 +49,12 @@ namespace Tests
                 + "} else {\n"
                 + "return false;"
                 + "}"
-                + "let five = 5;"
-                + "let ten = 10;"
-                + "let add = fn(x, y) {"
+                + "var five = 5;"
+                + "var ten = 10;"
+                + "var add = fn(x, y) {"
                 + "x + y;"
                 + "};"
-                + "let result = add(five, ten) ;"
+                + "var result = add(five, ten) ;"
             };
                 
         TestToken[][] tests =
@@ -74,17 +74,17 @@ namespace Tests
                     new(TokTypes.EOF, "")
                 ],
                 [
-                    new(TokTypes.LET, "let"),
+                    new(TokTypes.VAR, "var"),
                     new(TokTypes.IDENT, "five"),
                     new(TokTypes.ASSIGN, "="),
                     new(TokTypes.INT, "5"),
                     new(TokTypes.SEMICOLON, ";"),
-                    new(TokTypes.LET, "let"),
+                    new(TokTypes.VAR, "var"),
                     new(TokTypes.IDENT, "ten"),
                     new(TokTypes.ASSIGN, "="),
                     new(TokTypes.INT, "10"),
                     new(TokTypes.SEMICOLON, ";"),
-                    new(TokTypes.LET, "let"),
+                    new(TokTypes.VAR, "var"),
                     new(TokTypes.IDENT, "add"),
                     new(TokTypes.ASSIGN, "="),
                     new(TokTypes.FUNCTION, "fn"),
@@ -100,7 +100,7 @@ namespace Tests
                     new(TokTypes.SEMICOLON, ";"),
                     new(TokTypes.RBRACE, "}"),
                     new(TokTypes.SEMICOLON, ";"),
-                    new(TokTypes.LET, "let"),
+                    new(TokTypes.VAR, "var"),
                     new(TokTypes.IDENT, "result"),
                     new(TokTypes.ASSIGN, "="),
                     new(TokTypes.IDENT, "add"),
@@ -151,17 +151,17 @@ namespace Tests
                     new(TokTypes.SEMICOLON, ";"),
                     new(TokTypes.RBRACE, "}"),
 
-                    new(TokTypes.LET, "let"),
+                    new(TokTypes.VAR, "var"),
                     new(TokTypes.IDENT, "five"),
                     new(TokTypes.ASSIGN, "="),
                     new(TokTypes.INT, "5"),
                     new(TokTypes.SEMICOLON, ";"),
-                    new(TokTypes.LET, "let"),
+                    new(TokTypes.VAR, "var"),
                     new(TokTypes.IDENT, "ten"),
                     new(TokTypes.ASSIGN, "="),
                     new(TokTypes.INT, "10"),
                     new(TokTypes.SEMICOLON, ";"),
-                    new(TokTypes.LET, "let"),
+                    new(TokTypes.VAR, "var"),
                     new(TokTypes.IDENT, "add"),
                     new(TokTypes.ASSIGN, "="),
                     new(TokTypes.FUNCTION, "fn"),
@@ -177,7 +177,7 @@ namespace Tests
                     new(TokTypes.SEMICOLON, ";"),
                     new(TokTypes.RBRACE, "}"),
                     new(TokTypes.SEMICOLON, ";"),
-                    new(TokTypes.LET, "let"),
+                    new(TokTypes.VAR, "var"),
                     new(TokTypes.IDENT, "result"),
                     new(TokTypes.ASSIGN, "="),
                     new(TokTypes.IDENT, "add"),
@@ -224,10 +224,10 @@ namespace Tests
         public void test_parser()
         {
 
-            String letInput =
-              "let x = 5; \n"
-            + "let y = 10;\n"
-            + "let foobar = 838383;";
+            String varInput =
+              "var x = 5; \n"
+            + "var y = 10;\n"
+            + "var foobar = 838383;";
 
             TestIdentifier[] testIdentifiers = [new("x"), new("y"), new("foobar")];
 
@@ -237,7 +237,7 @@ namespace Tests
             + "return 993322;";
 
             LexerManager lexMan = new();
-            lexMan.init_lexer(letInput);
+            lexMan.init_lexer(varInput);
             Parser par = new(lexMan);
 
             InterpreterC_.Program program = par.parse_program();
@@ -255,7 +255,7 @@ namespace Tests
             {
                 Statement stmt = program.statements[i];
 
-                test_let_statement(stmt, testIdentifiers[i].expectedIdentifier, ref par);
+                test_var_statement(stmt, testIdentifiers[i].expectedIdentifier, ref par);
             }
 
             bool ok = par.check_for_parser_errors();
@@ -291,32 +291,75 @@ namespace Tests
             }
             Console.WriteLine(1 + " - ok");
         }
-        void test_let_statement(Statement stmt, String exIdent, ref Parser par)
+        void test_var_statement(Statement stmt, String exIdent, ref Parser par)
         {
-            if (stmt.token_literal() != "let")
+            if (stmt.token_literal() != "var")
             {
-                throw new Exception("ERROR: statement is not 'let', got: " + stmt.token_literal());
+                throw new Exception("ERROR: statement is not 'var', got: " + stmt.token_literal());
             }
 
-            bool ok = stmt is LetStatement letStmt;
+            bool ok = stmt is VarStatement varStmt;
             if (!ok)
             {
-                throw new Exception("ERROR: stmt is not LetStatement, got: " + stmt);
+                throw new Exception("ERROR: stmt is not VarStatement, got: " + stmt);
             }
             else
             {
-                letStmt = (LetStatement)stmt;
+                varStmt = (VarStatement)stmt;
             }
 
-            if (letStmt.name.value != exIdent)
+            if (varStmt.name.value != exIdent)
             {
-                throw new Exception("ERROR: Identifier was not expected Identifier. Expected: " + exIdent + " | Received: " + letStmt.name.value);
+                throw new Exception("ERROR: Identifier was not expected Identifier. Expected: " + exIdent + " | Received: " + varStmt.name.value);
             }
 
-            if (letStmt.name.token_literal() != exIdent)
+            if (varStmt.name.token_literal() != exIdent)
             {
-                throw new Exception("ERROR: Identifiers token literal was NOT Identifiers value. Expected: " + exIdent + " | Received: " + letStmt.name.token_literal() + " - is the stmt to letStmt conversion faulty?");
+                throw new Exception("ERROR: Identifiers token literal was NOT Identifiers value. Expected: " + exIdent + " | Received: " + varStmt.name.token_literal() + " - is the stmt to varStmt conversion faulty?");
             }
+        }
+
+        public void test_if_else_Expression()
+        {
+            String testInput = "if (2 < 5) { 5 } else { 9 }";
+
+            LexerManager lexMan = new();
+            lexMan.init_lexer(testInput);
+            Parser par = new(lexMan);
+            InterpreterC_.Program pro = par.parse_program();
+            
+            par.check_for_parser_errors();
+            
+            if (pro.statements.Count != 1)
+            {
+                throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
+            }
+            Statement stmt = pro.statements[0];
+
+            if (stmt.token_literal() != "if")
+            {
+                throw new Exception("ERROR: statement is not 'if', got: " + stmt.token_literal());
+            }
+
+            bool ok = stmt is ExpressionStatement exStmt;
+            if (!ok)
+            {
+                throw new Exception("ERROR: stmt is not VarStatement, got: " + stmt);
+            }
+            else
+            {
+                exStmt = (ExpressionStatement)stmt;
+            }
+
+            ok = exStmt.express is IfExpression ifEx;
+            ifEx = (IfExpression)exStmt.express;
+            if (!ok)
+            {
+                throw new Exception("ERROR: expression was not an ifExpression");
+            }
+
+            Console.WriteLine("10 - ok");
+
         }
 
         void test_return_statement(Statement stmt, ref Parser par)
@@ -338,25 +381,25 @@ namespace Tests
         {
             InterpreterC_.Program pro = new();
             pro.statements = new();
-            LetStatement letStmt = new();
+            VarStatement varStmt = new();
 
-            letStmt.tok = new(TokTypes.LET, "let");
+            varStmt.tok = new(TokTypes.VAR, "var");
 
-            letStmt.name = new Identifier();
-            letStmt.name.tok = new(TokTypes.IDENT, "myVar");
-            letStmt.name.value = "myVar";
+            varStmt.name = new Identifier();
+            varStmt.name.tok = new(TokTypes.IDENT, "myVar");
+            varStmt.name.value = "myVar";
 
             InterpreterC_.Identifier ident = new();
             ident.tok = new(TokTypes.IDENT, "myOtherVar");
             ident.value = "myOtherVar";
-            letStmt.value = ident;
+            varStmt.value = ident;
 
 
-            pro.statements.Add(letStmt);
+            pro.statements.Add(varStmt);
 
-            if (pro._string() != "let myVar = myOtherVar;")
+            if (pro._string() != "var myVar = myOtherVar;")
             {
-                throw new Exception("ERROR: _string function does not work! Expected: " + "let myVar = myOtherVar;" + ", received: " + pro._string());
+                throw new Exception("ERROR: _string function does not work! Expected: " + "var myVar = myOtherVar;" + ", received: " + pro._string());
             }
             Console.WriteLine("3 - ok");
         }
