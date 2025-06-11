@@ -14,8 +14,8 @@ namespace InterpreterC_
     [SimpleJob(
     RuntimeMoniker.Net80,
     launchCount: 1,     // L
-    warmupCount: 10,     // W
-    iterationCount: 100,    // I
+    warmupCount: 15,     // W
+    iterationCount: 50,    // I
     invocationCount: 100000000   // N
 )]
     public class Benchmark_NO_InstAndInit
@@ -54,12 +54,8 @@ namespace InterpreterC_
         public void Setup()
         {
             parLexMan.init_lexer(varInput);
-            walLexMan.init_lexer(varInput);
 
             parPar = new(parLexMan);
-            walPar = new(walLexMan);
-
-            walPro = walPar.parse_program();
         }
 
 
@@ -71,30 +67,15 @@ namespace InterpreterC_
             parPar!.parse_program();
         }
 
-        [Benchmark]
-        public void parser()
-        {
-            LexerManager lexMan = new();
-            lexMan.init_lexer(varInput);
-            Parser par = new(lexMan);
-            Program pro = par!.parse_program();
-        }
-        LexerManager walLexMan = new();
-        Parser? walPar;
-        Program walPro;
-        /* [Benchmark]
-        public void Walker()
-        {
-            walk(walPro!);
-        }
-        */
+        //TODO: implement the gawd daum walking function!!!
     }
+
     [MemoryDiagnoser]
     [SimpleJob(
     RuntimeMoniker.Net80,
     launchCount: 1,     // L
     warmupCount: 10,     // W
-    iterationCount: 100,    // I
+    iterationCount: 50,    // I
     invocationCount: 100000   // N
     )]
     public class Benchmark_WITH_InstAndInit
