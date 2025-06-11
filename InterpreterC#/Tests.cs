@@ -362,6 +362,52 @@ namespace Tests
 
         }
 
+        public void test_function_literals()
+        {
+            String testInput = 
+                "fn(pOne, pTwo, pThree) {" +
+                "return pOne + pTwo + pThree;" +
+                "}";
+
+            LexerManager lexMan = new();
+            lexMan.init_lexer(testInput);
+            Parser par = new(lexMan);
+            InterpreterC_.Program pro = par.parse_program();
+
+            par.check_for_parser_errors();
+
+            if (pro.statements.Count != 1)
+            {
+                throw new Exception("ERROR: program has to few or to many statements, received: " + pro.statements.Count);
+            }
+            Statement stmt = pro.statements[0];
+
+            if (stmt.token_literal() != "fn")
+            {
+                throw new Exception("ERROR: statement is not 'fn', got: " + stmt.token_literal());
+            }
+
+            bool ok = stmt is ExpressionStatement exStmt;
+            if (!ok)
+            {
+                throw new Exception("ERROR: stmt is not VarStatement, got: " + stmt);
+            }
+            else
+            {
+                exStmt = (ExpressionStatement)stmt;
+            }
+
+            ok = exStmt.express is FunctionLiteral funcLit;
+            funcLit = (FunctionLiteral)exStmt.express;
+            if (!ok)
+            {
+                throw new Exception("ERROR: expression was not FunctionLiteral");
+            }
+
+            Console.WriteLine("11 - ok");
+
+        }
+
         void test_return_statement(Statement stmt, ref Parser par)
         {
 

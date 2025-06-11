@@ -44,6 +44,7 @@ namespace InterpreterC_
             register_prefix_parsing_func(TokTypes.FALSE, parse_boolean);
             register_prefix_parsing_func(TokTypes.LPAREN, parse_grouped_expression);
             register_prefix_parsing_func(TokTypes.IF, parse_if_expression);
+            register_prefix_parsing_func(TokTypes.FUNCTION, parse_function_literal);
 
             register_infix_parsing_func(TokTypes.LT, _parse_infix_expression);
             register_infix_parsing_func(TokTypes.GT, _parse_infix_expression);
@@ -106,6 +107,43 @@ namespace InterpreterC_
             }
 
             return block;
+        }
+
+        private Expression parse_function_literal()
+        {
+            FunctionLiteral fnLit = new();
+            fnLit.tok = curToken;
+            fnLit.parameters = new();
+            fnLit.contents = new();
+
+            if(!expected_peek(TokTypes.LPAREN))
+            {
+                return null;
+            }
+            next_token();
+
+            Identifier ident = (Identifier)parse_identifier();
+            fnLit.parameters.Add(ident);
+            while(peekToken_is(TokTypes.COMMA))
+            {
+                next_token();
+                next_token();
+                ident = (Identifier)parse_identifier();
+                fnLit.parameters.Add(ident);
+            }
+
+            if (!expected_peek(TokTypes.RPAREN))
+            {
+                return null;
+            }
+            if (!expected_peek(TokTypes.LBRACE))
+            {
+                return null;
+            }
+
+            fnLit.contents = parse_block_statement();
+
+            return fnLit;
         }
 
         private Expression parse_if_expression()

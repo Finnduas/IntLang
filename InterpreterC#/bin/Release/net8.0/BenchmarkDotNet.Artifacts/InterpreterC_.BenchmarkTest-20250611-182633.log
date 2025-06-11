@@ -1,0 +1,152 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 1 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet  restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1/" /p:OutDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1\bin\Release\net8.0/" /p:OutputPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1\bin\Release\net8.0/" /p:PublishDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1\publish/" in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1
+// command took 0.97 sec and exited with 0
+// start dotnet  build -c Release --no-restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1/" /p:OutDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1\bin\Release\net8.0/" /p:OutputPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1\bin\Release\net8.0/" /p:PublishDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1\publish/" --output "C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1\bin\Release\net8.0/" in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1
+// command took 3.67 sec and exited with 0
+// ***** Done, took 00:00:04 (4.69 sec)   *****
+// Found 1 benchmarks:
+//   BenchmarkTest.Parser: Job-KGGQHU(Runtime=.NET 8.0, InvocationCount=1000, IterationCount=10, LaunchCount=1, UnrollFactor=1, WarmupCount=3)
+
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: BenchmarkTest.Parser: Job-KGGQHU(Runtime=.NET 8.0, InvocationCount=1000, IterationCount=10, LaunchCount=1, UnrollFactor=1, WarmupCount=3)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet InterpreterC#-Job-KGGQHU-1.dll --anonymousPipes 1476 1472 --benchmarkName InterpreterC_.BenchmarkTest.Parser --job "Runtime=.NET 8.0, InvocationCount=1000, IterationCount=10, LaunchCount=1, UnrollFactor=1, WarmupCount=3" --benchmarkId 0 in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KGGQHU-1\bin\Release\net8.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.1
+// Runtime=.NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: Job-RVDDGC(InvocationCount=1000, IterationCount=10, LaunchCount=1, UnrollFactor=1, WarmupCount=3)
+
+OverheadJitting  1: 1 op, 117000.00 ns, 117.0000 us/op
+WorkloadJitting  1: 1 op, 149600.00 ns, 149.6000 us/op
+
+OverheadWarmup   1: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadWarmup   2: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadWarmup   3: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadWarmup   4: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadWarmup   5: 1000 op, 1500.00 ns, 1.5000 ns/op
+
+OverheadActual   1: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual   2: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual   3: 1000 op, 1700.00 ns, 1.7000 ns/op
+OverheadActual   4: 1000 op, 1600.00 ns, 1.6000 ns/op
+OverheadActual   5: 1000 op, 1600.00 ns, 1.6000 ns/op
+OverheadActual   6: 1000 op, 1400.00 ns, 1.4000 ns/op
+OverheadActual   7: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual   8: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual   9: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual  10: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual  11: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual  12: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual  13: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual  14: 1000 op, 1500.00 ns, 1.5000 ns/op
+OverheadActual  15: 1000 op, 1500.00 ns, 1.5000 ns/op
+
+WorkloadWarmup   1: 1000 op, 29100.00 ns, 29.1000 ns/op
+WorkloadWarmup   2: 1000 op, 16300.00 ns, 16.3000 ns/op
+WorkloadWarmup   3: 1000 op, 15700.00 ns, 15.7000 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 1000 op, 29100.00 ns, 29.1000 ns/op
+WorkloadActual   2: 1000 op, 16500.00 ns, 16.5000 ns/op
+WorkloadActual   3: 1000 op, 16700.00 ns, 16.7000 ns/op
+WorkloadActual   4: 1000 op, 16100.00 ns, 16.1000 ns/op
+WorkloadActual   5: 1000 op, 16800.00 ns, 16.8000 ns/op
+WorkloadActual   6: 1000 op, 20100.00 ns, 20.1000 ns/op
+WorkloadActual   7: 1000 op, 21000.00 ns, 21.0000 ns/op
+WorkloadActual   8: 1000 op, 20500.00 ns, 20.5000 ns/op
+WorkloadActual   9: 1000 op, 20700.00 ns, 20.7000 ns/op
+WorkloadActual  10: 1000 op, 20400.00 ns, 20.4000 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 1000 op, 15000.00 ns, 15.0000 ns/op
+WorkloadResult   2: 1000 op, 15200.00 ns, 15.2000 ns/op
+WorkloadResult   3: 1000 op, 14600.00 ns, 14.6000 ns/op
+WorkloadResult   4: 1000 op, 15300.00 ns, 15.3000 ns/op
+WorkloadResult   5: 1000 op, 18600.00 ns, 18.6000 ns/op
+WorkloadResult   6: 1000 op, 19500.00 ns, 19.5000 ns/op
+WorkloadResult   7: 1000 op, 19000.00 ns, 19.0000 ns/op
+WorkloadResult   8: 1000 op, 19200.00 ns, 19.2000 ns/op
+WorkloadResult   9: 1000 op, 18900.00 ns, 18.9000 ns/op
+// GC:  0 0 0 32112 1000
+// Threading:  0 0 1000
+
+// AfterAll
+// Benchmark Process 33632 has exited with code 0.
+
+Mean = 17.256 ns, StdErr = 0.713 ns (4.13%), N = 9, StdDev = 2.138 ns
+Min = 14.600 ns, Q1 = 15.200 ns, Median = 18.600 ns, Q3 = 19.000 ns, Max = 19.500 ns
+IQR = 3.800 ns, LowerFence = 9.500 ns, UpperFence = 24.700 ns
+ConfidenceInterval = [13.663 ns; 20.848 ns] (CI 99.9%), Margin = 3.592 ns (20.82% of Mean)
+Skewness = -0.18, Kurtosis = 0.89, MValue = 3.6
+
+// ** Remained 0 (0.0%) benchmark(s) to run. Estimated finish 2025-06-11 18:26 (0h 0m from now) **
+Successfully reverted power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// ***** BenchmarkRunner: Finish  *****
+
+// * Export *
+  BenchmarkDotNet.Artifacts\results\InterpreterC_.BenchmarkTest-report.csv
+  BenchmarkDotNet.Artifacts\results\InterpreterC_.BenchmarkTest-report-github.md
+  BenchmarkDotNet.Artifacts\results\InterpreterC_.BenchmarkTest-report.html
+
+// * Detailed results *
+BenchmarkTest.Parser: Job-KGGQHU(Runtime=.NET 8.0, InvocationCount=1000, IterationCount=10, LaunchCount=1, UnrollFactor=1, WarmupCount=3)
+Runtime = .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 17.256 ns, StdErr = 0.713 ns (4.13%), N = 9, StdDev = 2.138 ns
+Min = 14.600 ns, Q1 = 15.200 ns, Median = 18.600 ns, Q3 = 19.000 ns, Max = 19.500 ns
+IQR = 3.800 ns, LowerFence = 9.500 ns, UpperFence = 24.700 ns
+ConfidenceInterval = [13.663 ns; 20.848 ns] (CI 99.9%), Margin = 3.592 ns (20.82% of Mean)
+Skewness = -0.18, Kurtosis = 0.89, MValue = 3.6
+-------------------- Histogram --------------------
+[13.601 ns ; 16.299 ns) | @@@@
+[16.299 ns ; 17.701 ns) | 
+[17.701 ns ; 20.849 ns) | @@@@@
+---------------------------------------------------
+
+// * Summary *
+
+BenchmarkDotNet v0.15.1, Windows 11 (10.0.26100.4061/24H2/2024Update/HudsonValley)
+AMD Ryzen 7 6800H with Radeon Graphics 3.20GHz, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.101
+  [Host]     : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+  Job-KGGQHU : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+
+Runtime=.NET 8.0  InvocationCount=1000  IterationCount=10  
+LaunchCount=1  UnrollFactor=1  WarmupCount=3  
+
+| Method | Mean     | Error    | StdDev   | Allocated |
+|------- |---------:|---------:|---------:|----------:|
+| Parser | 17.26 ns | 3.592 ns | 2.138 ns |      32 B |
+
+// * Warnings *
+MinIterationTime
+  BenchmarkTest.Parser: Runtime=.NET 8.0, InvocationCount=1000, IterationCount=10, LaunchCount=1, UnrollFactor=1, WarmupCount=3 -> The minimum observed iteration time is 16.1μs which is very small. It's recommended to increase it to at least 100ms using more operations.
+
+// * Hints *
+Outliers
+  BenchmarkTest.Parser: Runtime=.NET 8.0, InvocationCount=1000, IterationCount=10, LaunchCount=1, UnrollFactor=1, WarmupCount=3 -> 1 outlier  was  removed (29.10 ns)
+
+// * Legends *
+  Mean      : Arithmetic mean of all measurements
+  Error     : Half of 99.9% confidence interval
+  StdDev    : Standard deviation of all measurements
+  Allocated : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+  1 ns      : 1 Nanosecond (0.000000001 sec)
+
+// * Diagnostic Output - MemoryDiagnoser *
+
+
+// ***** BenchmarkRunner: End *****
+Run time: 00:00:00 (0.43 sec), executed benchmarks: 1
+
+Global total time: 00:00:05 (5.31 sec), executed benchmarks: 1
+// * Artifacts cleanup *
+Artifacts cleanup is finished

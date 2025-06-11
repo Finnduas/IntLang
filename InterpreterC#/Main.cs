@@ -1,7 +1,10 @@
 ﻿using Lookup;
 using InterpreterC_;
 using Tests;
-
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 LexerManager lexerManager = new();
 _Tests tests = new();
@@ -55,6 +58,8 @@ void parser_tests()
     tests.test_boolean_expression_parsing();
     
     tests.test_if_else_Expression();
+
+    tests.test_function_literals();
 }
 
 void run_tests() 
@@ -76,6 +81,12 @@ void run_tests()
 //-------------------------------------------------------------------------------------
 
 run_tests();
+LexerManager lexLexMan = new();
+///* //Benchmarks
+BenchmarkSwitcher
+    .FromAssembly(Assembly.GetExecutingAssembly())
+    .Run(args);
+//*/
 
 if (code != "" && code != null)
 {

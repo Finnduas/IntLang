@@ -1,0 +1,192 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 1 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet  restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1/" /p:OutDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1\bin\Release\net8.0/" /p:OutputPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1\bin\Release\net8.0/" /p:PublishDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1\publish/" in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1
+// command took 1.37 sec and exited with 0
+// start dotnet  build -c Release --no-restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1/" /p:OutDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1\bin\Release\net8.0/" /p:OutputPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1\bin\Release\net8.0/" /p:PublishDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1\publish/" --output "C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1\bin\Release\net8.0/" in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1
+// command took 3.6 sec and exited with 0
+// ***** Done, took 00:00:05 (5.02 sec)   *****
+// Found 1 benchmarks:
+//   BenchmarkTest.Parser: .NET 8.0(Runtime=.NET 8.0)
+
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: BenchmarkTest.Parser: .NET 8.0(Runtime=.NET 8.0)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet "InterpreterC#-.NET 8.0-1.dll" --anonymousPipes 1520 1516 --benchmarkName InterpreterC_.BenchmarkTest.Parser --job ".NET 8.0" --benchmarkId 0 in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-.NET 8.0-1\bin\Release\net8.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.1
+// Runtime=.NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: .NET 8.0
+
+OverheadJitting  1: 1 op, 77900.00 ns, 77.9000 us/op
+WorkloadJitting  1: 1 op, 134700.00 ns, 134.7000 us/op
+
+OverheadJitting  2: 16 op, 118000.00 ns, 7.3750 us/op
+WorkloadJitting  2: 16 op, 121100.00 ns, 7.5688 us/op
+
+WorkloadPilot    1: 16 op, 1800.00 ns, 112.5000 ns/op
+WorkloadPilot    2: 32 op, 1700.00 ns, 53.1250 ns/op
+WorkloadPilot    3: 64 op, 2000.00 ns, 31.2500 ns/op
+WorkloadPilot    4: 128 op, 10800.00 ns, 84.3750 ns/op
+WorkloadPilot    5: 256 op, 10300.00 ns, 40.2344 ns/op
+WorkloadPilot    6: 512 op, 11200.00 ns, 21.8750 ns/op
+WorkloadPilot    7: 1024 op, 29300.00 ns, 28.6133 ns/op
+WorkloadPilot    8: 2048 op, 59700.00 ns, 29.1504 ns/op
+WorkloadPilot    9: 4096 op, 160300.00 ns, 39.1357 ns/op
+WorkloadPilot   10: 8192 op, 248900.00 ns, 30.3833 ns/op
+WorkloadPilot   11: 16384 op, 384400.00 ns, 23.4619 ns/op
+WorkloadPilot   12: 32768 op, 764500.00 ns, 23.3307 ns/op
+WorkloadPilot   13: 65536 op, 1427600.00 ns, 21.7834 ns/op
+WorkloadPilot   14: 131072 op, 2790400.00 ns, 21.2891 ns/op
+WorkloadPilot   15: 262144 op, 5649500.00 ns, 21.5511 ns/op
+WorkloadPilot   16: 524288 op, 9358400.00 ns, 17.8497 ns/op
+WorkloadPilot   17: 1048576 op, 17532500.00 ns, 16.7203 ns/op
+WorkloadPilot   18: 2097152 op, 34826500.00 ns, 16.6066 ns/op
+WorkloadPilot   19: 4194304 op, 60175200.00 ns, 14.3469 ns/op
+WorkloadPilot   20: 8388608 op, 41918800.00 ns, 4.9971 ns/op
+WorkloadPilot   21: 16777216 op, 79264800.00 ns, 4.7246 ns/op
+WorkloadPilot   22: 33554432 op, 157694100.00 ns, 4.6997 ns/op
+WorkloadPilot   23: 67108864 op, 334361900.00 ns, 4.9824 ns/op
+WorkloadPilot   24: 134217728 op, 680072000.00 ns, 5.0669 ns/op
+
+OverheadWarmup   1: 134217728 op, 223605100.00 ns, 1.6660 ns/op
+OverheadWarmup   2: 134217728 op, 167504400.00 ns, 1.2480 ns/op
+OverheadWarmup   3: 134217728 op, 168014900.00 ns, 1.2518 ns/op
+OverheadWarmup   4: 134217728 op, 160444100.00 ns, 1.1954 ns/op
+OverheadWarmup   5: 134217728 op, 159264200.00 ns, 1.1866 ns/op
+OverheadWarmup   6: 134217728 op, 160109600.00 ns, 1.1929 ns/op
+OverheadWarmup   7: 134217728 op, 161537300.00 ns, 1.2035 ns/op
+OverheadWarmup   8: 134217728 op, 160802600.00 ns, 1.1981 ns/op
+
+OverheadActual   1: 134217728 op, 161529000.00 ns, 1.2035 ns/op
+OverheadActual   2: 134217728 op, 168916100.00 ns, 1.2585 ns/op
+OverheadActual   3: 134217728 op, 160993700.00 ns, 1.1995 ns/op
+OverheadActual   4: 134217728 op, 160854800.00 ns, 1.1985 ns/op
+OverheadActual   5: 134217728 op, 160995400.00 ns, 1.1995 ns/op
+OverheadActual   6: 134217728 op, 161278600.00 ns, 1.2016 ns/op
+OverheadActual   7: 134217728 op, 158487400.00 ns, 1.1808 ns/op
+OverheadActual   8: 134217728 op, 160334000.00 ns, 1.1946 ns/op
+OverheadActual   9: 134217728 op, 160823800.00 ns, 1.1982 ns/op
+OverheadActual  10: 134217728 op, 160541300.00 ns, 1.1961 ns/op
+OverheadActual  11: 134217728 op, 160912400.00 ns, 1.1989 ns/op
+OverheadActual  12: 134217728 op, 160483700.00 ns, 1.1957 ns/op
+OverheadActual  13: 134217728 op, 160994500.00 ns, 1.1995 ns/op
+OverheadActual  14: 134217728 op, 160887100.00 ns, 1.1987 ns/op
+OverheadActual  15: 134217728 op, 160620300.00 ns, 1.1967 ns/op
+
+OverheadWarmup   1: 134217728 op, 160442400.00 ns, 1.1954 ns/op
+OverheadWarmup   2: 134217728 op, 158248600.00 ns, 1.1790 ns/op
+OverheadWarmup   3: 134217728 op, 160470900.00 ns, 1.1956 ns/op
+OverheadWarmup   4: 134217728 op, 163742500.00 ns, 1.2200 ns/op
+OverheadWarmup   5: 134217728 op, 160992900.00 ns, 1.1995 ns/op
+OverheadWarmup   6: 134217728 op, 161533800.00 ns, 1.2035 ns/op
+OverheadWarmup   7: 134217728 op, 158532000.00 ns, 1.1812 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 134217728 op, 659976600.00 ns, 4.9172 ns/op
+WorkloadActual   2: 134217728 op, 656360100.00 ns, 4.8903 ns/op
+WorkloadActual   3: 134217728 op, 660441700.00 ns, 4.9207 ns/op
+WorkloadActual   4: 134217728 op, 648595900.00 ns, 4.8324 ns/op
+WorkloadActual   5: 134217728 op, 651497400.00 ns, 4.8540 ns/op
+WorkloadActual   6: 134217728 op, 642893700.00 ns, 4.7899 ns/op
+WorkloadActual   7: 134217728 op, 653637500.00 ns, 4.8700 ns/op
+WorkloadActual   8: 134217728 op, 682375200.00 ns, 5.0841 ns/op
+WorkloadActual   9: 134217728 op, 653843300.00 ns, 4.8715 ns/op
+WorkloadActual  10: 134217728 op, 648217800.00 ns, 4.8296 ns/op
+WorkloadActual  11: 134217728 op, 648050400.00 ns, 4.8284 ns/op
+WorkloadActual  12: 134217728 op, 655527200.00 ns, 4.8841 ns/op
+WorkloadActual  13: 134217728 op, 664186200.00 ns, 4.9486 ns/op
+WorkloadActual  14: 134217728 op, 665888200.00 ns, 4.9613 ns/op
+WorkloadActual  15: 134217728 op, 658384200.00 ns, 4.9053 ns/op
+
+// AfterActualRun
+WorkloadResult   1: 134217728 op, 499089500.00 ns, 3.7185 ns/op
+WorkloadResult   2: 134217728 op, 495473000.00 ns, 3.6916 ns/op
+WorkloadResult   3: 134217728 op, 499554600.00 ns, 3.7220 ns/op
+WorkloadResult   4: 134217728 op, 487708800.00 ns, 3.6337 ns/op
+WorkloadResult   5: 134217728 op, 490610300.00 ns, 3.6553 ns/op
+WorkloadResult   6: 134217728 op, 482006600.00 ns, 3.5912 ns/op
+WorkloadResult   7: 134217728 op, 492750400.00 ns, 3.6713 ns/op
+WorkloadResult   8: 134217728 op, 492956200.00 ns, 3.6728 ns/op
+WorkloadResult   9: 134217728 op, 487330700.00 ns, 3.6309 ns/op
+WorkloadResult  10: 134217728 op, 487163300.00 ns, 3.6296 ns/op
+WorkloadResult  11: 134217728 op, 494640100.00 ns, 3.6854 ns/op
+WorkloadResult  12: 134217728 op, 503299100.00 ns, 3.7499 ns/op
+WorkloadResult  13: 134217728 op, 505001100.00 ns, 3.7626 ns/op
+WorkloadResult  14: 134217728 op, 497497100.00 ns, 3.7066 ns/op
+// GC:  513 0 0 4294967696 134217728
+// Threading:  0 0 134217728
+
+// AfterAll
+// Benchmark Process 36816 has exited with code 0.
+
+Mean = 3.680 ns, StdErr = 0.013 ns (0.36%), N = 14, StdDev = 0.049 ns
+Min = 3.591 ns, Q1 = 3.639 ns, Median = 3.679 ns, Q3 = 3.716 ns, Max = 3.763 ns
+IQR = 0.076 ns, LowerFence = 3.524 ns, UpperFence = 3.830 ns
+ConfidenceInterval = [3.625 ns; 3.736 ns] (CI 99.9%), Margin = 0.056 ns (1.51% of Mean)
+Skewness = -0.01, Kurtosis = 1.89, MValue = 2
+
+// ** Remained 0 (0.0%) benchmark(s) to run. Estimated finish 2025-06-11 18:13 (0h 0m from now) **
+Successfully reverted power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// ***** BenchmarkRunner: Finish  *****
+
+// * Export *
+  BenchmarkDotNet.Artifacts\results\InterpreterC_.BenchmarkTest-report.csv
+  BenchmarkDotNet.Artifacts\results\InterpreterC_.BenchmarkTest-report-github.md
+  BenchmarkDotNet.Artifacts\results\InterpreterC_.BenchmarkTest-report.html
+
+// * Detailed results *
+BenchmarkTest.Parser: .NET 8.0(Runtime=.NET 8.0)
+Runtime = .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2; GC = Concurrent Workstation
+Mean = 3.680 ns, StdErr = 0.013 ns (0.36%), N = 14, StdDev = 0.049 ns
+Min = 3.591 ns, Q1 = 3.639 ns, Median = 3.679 ns, Q3 = 3.716 ns, Max = 3.763 ns
+IQR = 0.076 ns, LowerFence = 3.524 ns, UpperFence = 3.830 ns
+ConfidenceInterval = [3.625 ns; 3.736 ns] (CI 99.9%), Margin = 0.056 ns (1.51% of Mean)
+Skewness = -0.01, Kurtosis = 1.89, MValue = 2
+-------------------- Histogram --------------------
+[3.564 ns ; 3.660 ns) | @@@@@
+[3.660 ns ; 3.790 ns) | @@@@@@@@@
+---------------------------------------------------
+
+// * Summary *
+
+BenchmarkDotNet v0.15.1, Windows 11 (10.0.26100.4061/24H2/2024Update/HudsonValley)
+AMD Ryzen 7 6800H with Radeon Graphics 3.20GHz, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.101
+  [Host]   : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+  .NET 8.0 : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+
+Job=.NET 8.0  Runtime=.NET 8.0  
+
+| Method | Mean     | Error     | StdDev    | Gen0   | Allocated |
+|------- |---------:|----------:|----------:|-------:|----------:|
+| Parser | 3.680 ns | 0.0555 ns | 0.0492 ns | 0.0038 |      32 B |
+
+// * Hints *
+Outliers
+  BenchmarkTest.Parser: .NET 8.0 -> 1 outlier  was  removed (5.08 ns)
+
+// * Legends *
+  Mean      : Arithmetic mean of all measurements
+  Error     : Half of 99.9% confidence interval
+  StdDev    : Standard deviation of all measurements
+  Gen0      : GC Generation 0 collects per 1000 operations
+  Allocated : Allocated memory per single operation (managed only, inclusive, 1KB = 1024B)
+  1 ns      : 1 Nanosecond (0.000000001 sec)
+
+// * Diagnostic Output - MemoryDiagnoser *
+
+
+// ***** BenchmarkRunner: End *****
+Run time: 00:00:17 (17.31 sec), executed benchmarks: 1
+
+Global total time: 00:00:22 (22.53 sec), executed benchmarks: 1
+// * Artifacts cleanup *
+Artifacts cleanup is finished

@@ -6,6 +6,11 @@
     <RootNamespace>InterpreterC_</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<EmitToolchain>InProcessEmitToolchain</EmitToolchain>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.1" />
+  </ItemGroup>
 
 </Project>

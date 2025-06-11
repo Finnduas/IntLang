@@ -1,0 +1,104 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 1 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet  restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1/" /p:OutDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1\bin\Release\net8.0/" /p:OutputPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1\bin\Release\net8.0/" /p:PublishDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1\publish/" in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1
+// command took 1.17 sec and exited with 0
+// start dotnet  build -c Release --no-restore /p:UseSharedCompilation=false /p:BuildInParallel=false /m:1 /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1/" /p:OutDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1\bin\Release\net8.0/" /p:OutputPath="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1\bin\Release\net8.0/" /p:PublishDir="C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1\publish/" --output "C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1\bin\Release\net8.0/" in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1
+// command took 3.7 sec and exited with 0
+// ***** Done, took 00:00:04 (4.92 sec)   *****
+// Found 1 benchmarks:
+//   BenchmarkTest.Parser: Job-KCFJFT(Runtime=.NET 8.0, InvocationCount=100000000, IterationCount=1000, LaunchCount=1, WarmupCount=10)
+
+Setup power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)
+// **************************
+// Benchmark: BenchmarkTest.Parser: Job-KCFJFT(Runtime=.NET 8.0, InvocationCount=100000000, IterationCount=1000, LaunchCount=1, WarmupCount=10)
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: dotnet InterpreterC#-Job-KCFJFT-1.dll --anonymousPipes 1400 1432 --benchmarkName InterpreterC_.BenchmarkTest.Parser --job "Runtime=.NET 8.0, InvocationCount=100000000, IterationCount=1000, LaunchCount=1, WarmupCount=10" --benchmarkId 0 in C:\Users\mikaa\C\GitHub\IntLang\InterpreterC#\bin\Release\net8.0\InterpreterC#-Job-KCFJFT-1\bin\Release\net8.0
+// BeforeAnythingElse
+
+// Benchmark Process Environment Information:
+// BenchmarkDotNet v0.15.1
+// Runtime=.NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+// GC=Concurrent Workstation
+// HardwareIntrinsics=AVX2,AES,BMI1,BMI2,FMA,LZCNT,PCLMUL,POPCNT VectorSize=256
+// Job: Job-DOCBRN(InvocationCount=100000000, IterationCount=1000, LaunchCount=1, WarmupCount=10)
+
+OverheadJitting  1: 16 op, 140200.00 ns, 8.7625 us/op
+WorkloadJitting  1: 16 op, 216400.00 ns, 13.5250 us/op
+
+OverheadWarmup   1: 100000000 op, 119757900.00 ns, 1.1976 ns/op
+OverheadWarmup   2: 100000000 op, 123169700.00 ns, 1.2317 ns/op
+OverheadWarmup   3: 100000000 op, 202543500.00 ns, 2.0254 ns/op
+OverheadWarmup   4: 100000000 op, 117661700.00 ns, 1.1766 ns/op
+OverheadWarmup   5: 100000000 op, 118114300.00 ns, 1.1811 ns/op
+OverheadWarmup   6: 100000000 op, 118062300.00 ns, 1.1806 ns/op
+
+OverheadActual   1: 100000000 op, 117826600.00 ns, 1.1783 ns/op
+OverheadActual   2: 100000000 op, 118682500.00 ns, 1.1868 ns/op
+OverheadActual   3: 100000000 op, 117863500.00 ns, 1.1786 ns/op
+OverheadActual   4: 100000000 op, 118004300.00 ns, 1.1800 ns/op
+OverheadActual   5: 100000000 op, 117053300.00 ns, 1.1705 ns/op
+OverheadActual   6: 100000000 op, 118453800.00 ns, 1.1845 ns/op
+OverheadActual   7: 100000000 op, 120190600.00 ns, 1.2019 ns/op
+OverheadActual   8: 100000000 op, 118352100.00 ns, 1.1835 ns/op
+OverheadActual   9: 100000000 op, 118390400.00 ns, 1.1839 ns/op
+OverheadActual  10: 100000000 op, 118402300.00 ns, 1.1840 ns/op
+OverheadActual  11: 100000000 op, 117809300.00 ns, 1.1781 ns/op
+OverheadActual  12: 100000000 op, 122623600.00 ns, 1.2262 ns/op
+OverheadActual  13: 100000000 op, 118298800.00 ns, 1.1830 ns/op
+OverheadActual  14: 100000000 op, 119960200.00 ns, 1.1996 ns/op
+OverheadActual  15: 100000000 op, 119290000.00 ns, 1.1929 ns/op
+
+WorkloadWarmup   1: 100000000 op, 673559700.00 ns, 6.7356 ns/op
+WorkloadWarmup   2: 100000000 op, 482358400.00 ns, 4.8236 ns/op
+WorkloadWarmup   3: 100000000 op, 480360000.00 ns, 4.8036 ns/op
+WorkloadWarmup   4: 100000000 op, 482118200.00 ns, 4.8212 ns/op
+WorkloadWarmup   5: 100000000 op, 477941300.00 ns, 4.7794 ns/op
+WorkloadWarmup   6: 100000000 op, 488852200.00 ns, 4.8885 ns/op
+WorkloadWarmup   7: 100000000 op, 478670700.00 ns, 4.7867 ns/op
+WorkloadWarmup   8: 100000000 op, 481609200.00 ns, 4.8161 ns/op
+WorkloadWarmup   9: 100000000 op, 479470300.00 ns, 4.7947 ns/op
+WorkloadWarmup  10: 100000000 op, 483685400.00 ns, 4.8369 ns/op
+
+// BeforeActualRun
+WorkloadActual   1: 100000000 op, 493465800.00 ns, 4.9347 ns/op
+WorkloadActual   2: 100000000 op, 548020200.00 ns, 5.4802 ns/op
+WorkloadActual   3: 100000000 op, 543090300.00 ns, 5.4309 ns/op
+WorkloadActual   4: 100000000 op, 535163400.00 ns, 5.3516 ns/op
+WorkloadActual   5: 100000000 op, 532964400.00 ns, 5.3296 ns/op
+WorkloadActual   6: 100000000 op, 530251000.00 ns, 5.3025 ns/op
+WorkloadActual   7: 100000000 op, 520880000.00 ns, 5.2088 ns/op
+WorkloadActual   8: 100000000 op, 529457200.00 ns, 5.2946 ns/op
+WorkloadActual   9: 100000000 op, 524543400.00 ns, 5.2454 ns/op
+WorkloadActual  10: 100000000 op, 525931600.00 ns, 5.2593 ns/op
+WorkloadActual  11: 100000000 op, 522862900.00 ns, 5.2286 ns/op
+WorkloadActual  12: 100000000 op, 528659600.00 ns, 5.2866 ns/op
+WorkloadActual  13: 100000000 op, 526972100.00 ns, 5.2697 ns/op
+WorkloadActual  14: 100000000 op, 522021800.00 ns, 5.2202 ns/op
+WorkloadActual  15: 100000000 op, 528403800.00 ns, 5.2840 ns/op
+WorkloadActual  16: 100000000 op, 517897400.00 ns, 5.1790 ns/op
+WorkloadActual  17: 100000000 op, 523211600.00 ns, 5.2321 ns/op
+WorkloadActual  18: 100000000 op, 472912900.00 ns, 4.7291 ns/op
+WorkloadActual  19: 100000000 op, 470601800.00 ns, 4.7060 ns/op
+WorkloadActual  20: 100000000 op, 480737400.00 ns, 4.8074 ns/op
+WorkloadActual  21: 100000000 op, 475741900.00 ns, 4.7574 ns/op
+WorkloadActual  22: 100000000 op, 514320600.00 ns, 5.1432 ns/op
+WorkloadActual  23: 100000000 op, 480111000.00 ns, 4.8011 ns/op
+WorkloadActual  24: 100000000 op, 472942700.00 ns, 4.7294 ns/op
+WorkloadActual  25: 100000000 op, 478255100.00 ns, 4.7826 ns/op
+WorkloadActual  26: 100000000 op, 475038400.00 ns, 4.7504 ns/op
+WorkloadActual  27: 100000000 op, 473712400.00 ns, 4.7371 ns/op
+WorkloadActual  28: 100000000 op, 472661700.00 ns, 4.7266 ns/op
+WorkloadActual  29: 100000000 op, 473706800.00 ns, 4.7371 ns/op
+WorkloadActual  30: 100000000 op, 472638600.00 ns, 4.7264 ns/op
+WorkloadActual  31: 100000000 op, 487913400.00 ns, 4.8791 ns/op
+WorkloadActual  32: 100000000 op, 487677500.00 ns, 4.8768 ns/op
+WorkloadActual  33: 100000000 op, 492814700.00 ns, 4.9281 ns/op
+WorkloadActual  34: 100000000 op, 491690200.00 ns, 4.9169 ns/op
+WorkloadActual  35: 100000000 op, 482377200.00 ns, 4.8238 ns/op
+WorkloadActual  36: 100000000 op, 484636200.00 ns, 4.8464 ns/op
+WorkloadActual  37: 100000000 op, 511282100.00 ns, 5.1128 ns/op
+WorkloadActual  38: 100000000 op, 482155000.00 ns, 4.8216 ns/op
+Successfully reverted power plan (GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c FriendlyName: High performance)

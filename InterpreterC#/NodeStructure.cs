@@ -192,6 +192,41 @@ namespace InterpreterC_
         }
     }
 
+    internal class FunctionLiteral : Expression
+    {
+        public Token tok;
+        public List<Identifier>? parameters;
+        public BlockStatement? contents;
+
+        public void expression_node() { }
+
+        public String token_literal()
+        {
+            return tok.m_Literal;
+        }
+        public String _string()
+        {
+            String tmp = "";
+            tmp += "fn (";
+            if(parameters != null) 
+            { 
+                for(int i = 0; i < parameters.Count; ++i)
+                {
+                    tmp += parameters[i]._string();
+                    tmp += ", ";
+                }
+            }
+            tmp += ") { ";
+            if(contents != null)
+            {
+                contents._string();
+            }
+            tmp += " }";
+            
+            return tmp;
+        }
+    }
+
     internal class IfExpression : Expression
     {
         public Token tok;
