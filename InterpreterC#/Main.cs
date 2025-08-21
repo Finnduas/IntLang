@@ -5,6 +5,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 LexerManager lexerManager = new();
 _Tests tests = new();
@@ -15,17 +16,13 @@ static String read_code(String path)
     String line;
 
     StreamReader sr = new(path);
-    line = sr.ReadLine();
+    line = sr.ReadLine()!;
 
-    if (line == null) //assert
-    {
-        throw new Exception("ERROR: reading of file in specified directory failed OR file is empty");
-    }
+    code = line ?? throw new Exception("ERROR: reading of file in specified directory failed OR file is empty");
 
-    code = line;
     while (line != null)
     {
-        line = sr.ReadLine();
+        line = sr.ReadLine()!;
         code += "\n";
         code += line;
     }
@@ -82,11 +79,11 @@ void run_tests()
 
 run_tests();
 LexerManager lexLexMan = new();
-///* //Benchmarks
+/* //Benchmarks
 BenchmarkSwitcher
     .FromAssembly(Assembly.GetExecutingAssembly())
     .Run(args);
-//*/
+*/
 
 if (code != "" && code != null)
 {
@@ -98,7 +95,7 @@ else //start a ReadEvalPrintLoop
     Console.WriteLine("No code provided: Entering interactive mode...");
     
 REPLStart:
-    String input = "";
+    String? input = "";
     Token tok = new();
     
     Console.Write(">> ");
@@ -112,13 +109,21 @@ REPLStart:
     else
     {
         lexerManager.init_lexer(input);
-        tok = lexerManager.next_token();
-        while (tok.m_Type != TokTypes.EOF)
+        Parser parser = new(lexerManager);
+        InterpreterC_.Program program = parser.parse_program();
+        List<String> errors = parser.get_errors();
+        if (errors.Count > 0)
         {
-            Console.WriteLine("Type: " + tok.m_Type + " | Literal: " + tok.m_Literal);
-            tok = lexerManager.next_token(); 
+            foreach (String e in errors)
+            {
+                Console.WriteLine(e);
+            }    
         }
-        Console.WriteLine("Type: " + tok.m_Type + " | Literal: " + tok.m_Literal);
+        else
+        {
+            Console.WriteLine(program._string());
+        }
+
         goto REPLStart;
     }
 }

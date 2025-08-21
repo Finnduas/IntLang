@@ -112,14 +112,14 @@ namespace InterpreterC_
                 default:
                     if (is_letter(lex.ch))
                     {
-                        tok.m_Literal = read_identifier(ref lex);
-                        tok.m_Type = keyWords.lookup(tok.m_Literal);
+                        tok.literal = read_identifier(ref lex);
+                        tok.type = keyWords.lookup(tok.literal);
                         return tok;
                     }
                     else if (is_digit(lex.ch))
                     {
-                        tok.m_Type = TokTypes.INT;
-                        tok.m_Literal = read_number(ref lex);
+                        tok.type = TokTypes.INT;
+                        tok.literal = read_number(ref lex);
                         return tok;
                     }
                     else

@@ -29,7 +29,7 @@ namespace InterpreterC_
         public Token tok;
         public String value;
         public void expression_node() { }
-        public String token_literal() { return tok.m_Literal; }
+        public String token_literal() { return tok.literal; }
 
         public String _string()
         {
@@ -43,7 +43,7 @@ namespace InterpreterC_
         public Expression right;
         public String _operator;
         public void expression_node() { }
-        public String token_literal() { return tok.m_Literal; }
+        public String token_literal() { return tok.literal; }
 
         public String _string()
         {
@@ -58,7 +58,7 @@ namespace InterpreterC_
         public String _operator;
         public Expression right;
         public void expression_node() { }
-        public String token_literal() { return tok.m_Literal; }
+        public String token_literal() { return tok.literal; }
 
         public String _string()
         {
@@ -71,7 +71,7 @@ namespace InterpreterC_
         public Token tok;
         public int value;
         public void expression_node() { }
-        public String token_literal() { return tok.m_Literal; }
+        public String token_literal() { return tok.literal; }
 
         public String _string()
         {
@@ -93,11 +93,11 @@ namespace InterpreterC_
         public void expression_node(){ }
         public String token_literal()
         {
-            return tok.m_Literal;
+            return tok.literal;
         }
         public String _string()
         {
-            return tok.m_Literal;
+            return tok.literal;
         }
     }
 
@@ -107,7 +107,7 @@ namespace InterpreterC_
         public Expression express;
 
         public void statement_node() { }
-        public String token_literal() { return tok.m_Literal; }
+        public String token_literal() { return tok.literal; }
 
         public String _string()
         {
@@ -131,7 +131,7 @@ namespace InterpreterC_
         {
             String s = "";
 
-            s += tok.m_Literal + " ";
+            s += tok.literal + " ";
             s += name._string();
             s += " = ";
             if(value != null)
@@ -143,7 +143,7 @@ namespace InterpreterC_
             return s;
         }
         public void statement_node() { }
-        public String token_literal() { return tok.m_Literal; }
+        public String token_literal() { return tok.literal; }
     }
 
     internal class ReturnStatement : Statement
@@ -153,7 +153,7 @@ namespace InterpreterC_
 
         public String token_literal()
         {
-            return tok.m_Literal;
+            return tok.literal;
         }
         public void statement_node() { }
 
@@ -161,7 +161,7 @@ namespace InterpreterC_
         {
             String s = "";
 
-            s += tok.m_Literal + " ";
+            s += tok.literal + " ";
             if (returnValue != null)
             {
                 s += returnValue._string();
@@ -179,7 +179,7 @@ namespace InterpreterC_
         public void statement_node() { }
         public String token_literal()
         {
-            return tok.m_Literal;
+            return tok.literal;
         }
         public String _string()
         {
@@ -202,7 +202,7 @@ namespace InterpreterC_
 
         public String token_literal()
         {
-            return tok.m_Literal;
+            return tok.literal;
         }
         public String _string()
         {
@@ -227,29 +227,58 @@ namespace InterpreterC_
         }
     }
 
-    internal class IfExpression : Expression
+    internal class CallExpression : Expression
     {
         public Token tok;
-        public Expression condition;
-        public BlockStatement consequence;
-        public BlockStatement alternative;
+        public FunctionLiteral? func;
+        public List<Expression>? args;
 
         public void expression_node() { }
         public String token_literal()
         {
-            return tok.m_Literal;
+            return tok.literal;
+        }
+        public String _string()
+        {
+            String str = "";
+            str += func._string();
+            str += "(";
+            for(int i = 0; i < args.Count; ++i)
+            {
+                str += args[i]._string();
+            }
+            str += ")";
+            return str;
+        }
+    }
+    internal class IfExpression : Expression
+    {
+        public Token tok;
+        public Expression? condition;
+        public BlockStatement? consequence;
+        public BlockStatement? alternative;
+
+        public void expression_node() { }
+        public String token_literal()
+        {
+            return tok.literal;
         }
         public String _string()
         {
             String tmp = "";
             tmp += "if";
-            tmp += condition._string();
-            tmp += " ";
-            tmp += consequence._string();
+            tmp += "(";
+            tmp += condition!._string();
+            tmp += ")";
+            tmp += " {";
+            tmp += consequence!._string();
+            tmp += " }";
 
             if (alternative != null) {
                 tmp += "else";
+                tmp += "{";
                 tmp += alternative._string();
+                tmp += "}";
             }
 
             return tmp;

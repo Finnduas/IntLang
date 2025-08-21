@@ -4,13 +4,13 @@ namespace InterpreterC_
 {
     struct Token
     {
-        public String m_Type;
-        public String m_Literal;
+        public String type;
+        public String literal;
 
         public Token(String pT, String pL)
         {
-            m_Type = pT;
-            m_Literal = pL;
+            type = pT;
+            literal = pL;
         }
     }   
 }

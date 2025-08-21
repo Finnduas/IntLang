@@ -46,6 +46,7 @@ namespace InterpreterC_
             register_prefix_parsing_func(TokTypes.IF, parse_if_expression);
             register_prefix_parsing_func(TokTypes.FUNCTION, parse_function_literal);
 
+            register_infix_parsing_func(TokTypes.LPAREN, _parse_call_expression);
             register_infix_parsing_func(TokTypes.LT, _parse_infix_expression);
             register_infix_parsing_func(TokTypes.GT, _parse_infix_expression);
             register_infix_parsing_func(TokTypes.PLUS, _parse_infix_expression);
@@ -66,28 +67,64 @@ namespace InterpreterC_
             precedences.Add(TokTypes.MINUS, Precedence.SUM);
             precedences.Add(TokTypes.SLASH, Precedence.PRODUCT);
             precedences.Add(TokTypes.ASTERISK, Precedence.PRODUCT);
+            precedences.Add(TokTypes.LPAREN, Precedence.CALL);
         }
 
         private int peek_precedence()
         {
-            if (precedences.ContainsKey(peekToken.m_Type))
+            if (precedences.ContainsKey(peekToken.type))
             {
-                return precedences[peekToken.m_Type];
+                return precedences[peekToken.type];
             }
 
             return Precedence.LOWEST;
         }
         private int cur_precedence()
         {
-            if (precedences.ContainsKey(curToken.m_Type))
+            if (precedences.ContainsKey(curToken.type))
             {
-                return precedences[curToken.m_Type];
+                return precedences[curToken.type];
             }
 
             return Precedence.LOWEST;
         }
 
         // expression parsing -----------------------------------------------------------------------------
+
+        private Expression _parse_call_expression(Expression function)
+        {
+            CallExpression CE = new();
+            CE.func = (FunctionLiteral)function;
+            CE.args = parse_args();
+            return CE;
+        }
+
+        private List<Expression> parse_args()
+        {
+            List<Expression> args = new();
+            if(peekToken_is(TokTypes.RPAREN))
+            {
+                next_token();
+                return args;
+            }
+
+            next_token();
+            args.Add(parse_expression(Precedence.LOWEST));
+            
+            while (peekToken_is(TokTypes.COMMA))
+            {
+                next_token();
+                next_token();
+                args.Add(parse_expression(Precedence.LOWEST));
+            }
+
+            if(!expected_peek(TokTypes.RPAREN))
+            {
+                return null;
+            }
+
+            return args;
+        }
         private BlockStatement parse_block_statement()
         {
             BlockStatement block = new();
@@ -202,7 +239,7 @@ namespace InterpreterC_
 
         private Expression parse_boolean()
         {
-            Boolean _bool = new(curToken,  false ? curToken.m_Literal == TokTypes.TRUE : true);
+            Boolean _bool = new(curToken,  false ? curToken.literal == TokTypes.TRUE : true);
             return _bool;
         }
         
@@ -210,7 +247,7 @@ namespace InterpreterC_
         {
             Identifier ident = new();
             ident.tok = curToken;
-            ident.value = curToken.m_Literal;
+            ident.value = curToken.literal;
 
             return ident;
         }
@@ -221,7 +258,7 @@ namespace InterpreterC_
             intLit.tok = curToken;
             try
             {
-            intLit.value = int.Parse(curToken.m_Literal);
+            intLit.value = int.Parse(curToken.literal);
             }
             catch (OverflowException OEx)
             {
@@ -241,7 +278,7 @@ namespace InterpreterC_
         {
             PrefixExpression exp = new();
             exp.tok = curToken;
-            exp._operator = curToken.m_Literal;
+            exp._operator = curToken.literal;
 
             next_token();
 
@@ -255,7 +292,7 @@ namespace InterpreterC_
             InfixExpression exp = new();
             exp.tok = curToken;
             exp.left = left;
-            exp._operator = curToken.m_Literal;
+            exp._operator = curToken.literal;
 
             int precedence = cur_precedence();
             next_token();
@@ -283,7 +320,7 @@ namespace InterpreterC_
 
         public void peek_error(String tokType)
         {
-            errors.Add("expected next token to be " + tokType + ", got " + peekToken.m_Type);
+            errors.Add("expected next token to be " + tokType + ", got " + peekToken.type);
         }
 
         public bool check_for_parser_errors()
@@ -311,7 +348,7 @@ namespace InterpreterC_
 
         private bool curToken_is(String tokType)
         {
-            if (tokType == curToken.m_Type)
+            if (tokType == curToken.type)
             {
                 return true;
             }
@@ -323,7 +360,7 @@ namespace InterpreterC_
 
         private bool peekToken_is(String tokType)
         {
-            if(tokType == peekToken.m_Type)
+            if(tokType == peekToken.type)
             {
                 return true;
             }
@@ -356,10 +393,18 @@ namespace InterpreterC_
             }
             stmt.name = new Identifier();
             stmt.name.tok = curToken;
-            stmt.name.value = curToken.m_Literal;
+            stmt.name.value = curToken.literal;
+            
+            if (!expected_peek(TokTypes.ASSIGN))
+            {
+                return null;
+            }
 
-            //TODO: expressions should be parsed!!!, for now they're just skipped
-            while(curToken.m_Type != TokTypes.SEMICOLON)
+            next_token();
+            
+            stmt.value = parse_expression(Precedence.LOWEST);
+            
+            if(peekToken_is(TokTypes.SEMICOLON))
             {
                 next_token();
             }
@@ -373,37 +418,38 @@ namespace InterpreterC_
             stmt.tok = curToken;
 
             next_token();
-            
-            //TODO: expression should be parsed! But I to lazy so skip.
 
-            while(curToken.m_Type != TokTypes.SEMICOLON)
+            stmt.returnValue = parse_expression(Precedence.LOWEST);
+
+            if(peekToken_is(TokTypes.SEMICOLON))
             {
                 next_token();
             }
+
             return stmt;
         }
 
         private Expression parse_expression(int precedence)
         {
-            bool ok = prefixParsingFuncs.ContainsKey(curToken.m_Type);
+            bool ok = prefixParsingFuncs.ContainsKey(curToken.type);
             if(!ok)
             {
-                errors.Add("No parsing function found for token of type " + curToken.m_Type);
+                errors.Add("No parsing function found for token of type " + curToken.type);
                 return null;
             }
-            parse_prefix_expression prefix = prefixParsingFuncs[curToken.m_Type];
+            parse_prefix_expression prefix = prefixParsingFuncs[curToken.type];
             
             Expression leftExpress = prefix();
 
             while (!peekToken_is(TokTypes.SEMICOLON) && precedence < peek_precedence())
             {
-                bool parsingFuncExists = infixParsingFuncs.ContainsKey(peekToken.m_Type);
+                bool parsingFuncExists = infixParsingFuncs.ContainsKey(peekToken.type);
                 if (!parsingFuncExists)
                 {
                     return leftExpress;
                 }
 
-                parse_infix_expression infix = infixParsingFuncs[peekToken.m_Type];
+                parse_infix_expression infix = infixParsingFuncs[peekToken.type];
 
                 next_token();
 
@@ -429,7 +475,7 @@ namespace InterpreterC_
 
         private Statement parse_statement()
         {
-            switch(curToken.m_Type)
+            switch(curToken.type)
             {
                 case TokTypes.VAR:
                     return parse_var_statement();

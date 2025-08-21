@@ -13,7 +13,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Tests
 {
-    //TODO: make the testing structure homogenous - done ish - love that by the way - why tf am I talking to myself - ok enough. seriously
+    //TODO: make the testing structure more homogenous - done ish - love that by the way - why tf am I talking to myself - ok enough. seriously
     struct TestToken
     {
         public String expectedType;
@@ -198,14 +198,14 @@ namespace Tests
                 {
                     Token tok = lexerManager.next_token();
 
-                    if (tok.m_Type != tests[i][j].expectedType)
+                    if (tok.type != tests[i][j].expectedType)
                     {
-                        throw new Exception("ERROR: tokenType wrong; expexted: " + (tests[i][j].expectedType) + " received: " + tok.m_Type + " at i = " + i);
+                        throw new Exception("ERROR: tokenType wrong; expexted: " + (tests[i][j].expectedType) + " received: " + tok.type + " at i = " + i);
                     }
 
-                    if (tok.m_Literal != tests[i][j].expectedLiteral)
+                    if (tok.literal != tests[i][j].expectedLiteral)
                     {
-                        throw new Exception("ERROR: tokenLiteral wrong; expexted: " + (tests[i][j].expectedLiteral) + " received: " + tok.m_Literal + " at i = " + i);
+                        throw new Exception("ERROR: tokenLiteral wrong; expexted: " + (tests[i][j].expectedLiteral) + " received: " + tok.literal + " at i = " + i);
                     }
                 }
 
